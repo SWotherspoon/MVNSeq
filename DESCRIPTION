@@ -1,0 +1,23 @@
+Package: MVNSeq
+Type: Package
+Title: Normal Mixture and Hidden Markov Models
+Version: 0.1
+Date: 2015-11-14
+Authors@R: as.person(c(
+    "Simon Wotherspoon <Simon.Wotherspoon@utas.edu.au> [aut, cre]",
+    "Aidan Bindoff <Bindoffa@utas.edu.au> [aut]"))
+Depends: R(>= 3.0.1)
+Suggests:
+    mclust,
+    knitr,
+    rmarkdown
+Imports:
+    mvtnorm
+Description: Fit Normal Mixture and Hidden Markov models to grouped data, with
+    random effects to represent group variation.
+NeedsCompilation: no
+ByteCompile: yes
+License: GPL-3
+LazyData: TRUE
+RoxygenNote: 5.0.1
+VignetteBuilder: knitr
