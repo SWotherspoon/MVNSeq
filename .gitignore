@@ -43,3 +43,4 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 inst/doc
+.Rproj.user
