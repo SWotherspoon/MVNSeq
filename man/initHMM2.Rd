@@ -4,7 +4,7 @@
 \alias{initHMM2}
 \title{Initial Parameters}
 \usage{
-initHMM2(y, cl, formula1, formula2, data, K = max(cl))
+initHMM2(y, cl, formula1, formula2, data)
 }
 \arguments{
 \item{y}{the sequence of observations}

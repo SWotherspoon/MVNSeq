@@ -126,8 +126,9 @@ initGroup <- function(K,pars) {
 ##' @param data a dataframe of covariates
 ##' @param K the number of classes
 ##' @return estimated model parameters
-initHMM2 <- function(y,cl,formula1,formula2,data,K=max(cl)) {
+initHMM2 <- function(y,cl,formula1,formula2,data) {
 
+  K <- 2
   ## Component means and variances
   mvn <- lapply(1:K,function(k) {
     yk <- y[cl==k,,drop=F]
@@ -583,7 +584,9 @@ gmvnMix <- function(y,cl,gr,
   K <- max(cl)
   ys <- split.data.frame(y,gr)
   cls <- split(cl,gr)
-  pars <- mapply(initMix,y=ys,cl=cls,SIMPLIFY=FALSE)
+  pars <- mapply(initMix,y=ys,cl=cls,
+                 MoreArgs=list(K=K),
+                 SIMPLIFY=FALSE)
   pars <- initGroup(K,pars)$pars
 
   ## Weights for common mixing fractions
@@ -646,7 +649,9 @@ grmvnMix <- function(y,cl,gr,
   K <- max(cl)
   ys <- split.data.frame(y,gr)
   cls <- split(cl,gr)
-  pars <- mapply(initMix,y=ys,cl=cls,SIMPLIFY=FALSE)
+  pars <- mapply(initMix,y=ys,cl=cls,
+                 MoreArgs=list(K=K),
+                 SIMPLIFY=FALSE)
   fit <- initGroup(K,pars)
   pars <- fit$pars
   muv <- fit$muv
@@ -779,7 +784,9 @@ gmvnHMM <- function(y,cl,gr,
   K <- max(cl)
   ys <- split.data.frame(y,gr)
   cls <- split(cl,gr)
-  pars <- mapply(initHMM,y=ys,cl=cls,SIMPLIFY=FALSE)
+  pars <- mapply(initHMM,y=ys,cl=cls,
+                 MoreArgs=list(K=K),
+                 SIMPLIFY=FALSE)
   pars <- initGroup(K,pars)$pars
 
   ## Weights for common transitions
@@ -845,7 +852,9 @@ grmvnHMM <- function(y,cl,gr,
   K <- max(cl)
   ys <- split.data.frame(y,gr)
   cls <- split(cl,gr)
-  pars <- mapply(initHMM,y=ys,cl=cls,SIMPLIFY=FALSE)
+  pars <- mapply(initHMM,y=ys,cl=cls,
+                 MoreArgs=list(K=K),
+                 SIMPLIFY=FALSE)
   fit <- initGroup(K,pars)
   pars <- fit$pars
   muv <- fit$muv
@@ -993,7 +1002,7 @@ gmvnHMM2 <- function(y,cl,gr,
   datas <- split.data.frame(data,gr)
   cls <- split(cl,gr)
   pars <- mapply(initHMM2,y=ys,cl=cls,data=datas,
-                 MoreArgs=list(formula1=formula1,formula2=formula2,K=2),
+                 MoreArgs=list(formula1=formula1,formula2=formula2),
                  SIMPLIFY=FALSE)
   pars <- initGroup(K,pars)$pars
 
@@ -1050,7 +1059,7 @@ grmvnHMM2 <- function(y,cl,gr,
   datas <- split.data.frame(data,gr)
   cls <- split(cl,gr)
   pars <- mapply(initHMM2,y=ys,cl=cls,data=datas,
-                 MoreArgs=list(formula1=formula1,formula2=formula2,K=2),
+                 MoreArgs=list(formula1=formula1,formula2=formula2),
                  SIMPLIFY=FALSE)
   fit <- initGroup(K,pars)
   pars <- fit$pars
