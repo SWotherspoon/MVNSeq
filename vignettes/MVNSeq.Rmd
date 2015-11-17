@@ -41,14 +41,14 @@ summary(fit.mclust,parameters=T)
 
 Compare classification
 ```{r}
-table(max.col(fit$P),fit.mclust$classification)
+table(max.col(fit$pars$P),fit.mclust$classification)
 ```
 
 Match labels and compare means and variances
 ```{r}
 j <- order(max.col(table(max.col(fit$pars$P),fit.mclust$classification)))
-sapply(fit$mvn[j],function(p) p$mu)
-lapply(fit$mvn[j],function(p) p$Sigma)
+sapply(fit$pars$mvn[j],function(p) p$mu)
+lapply(fit$pars$mvn[j],function(p) p$Sigma)
 ```
 
 
@@ -143,31 +143,31 @@ summary(fit.mclust,parameters=T)
 
 Compare to mclust classification
 ```{r}
-table(max.col(fit$P),fit.mclust$classification)
+table(max.col(fit$pars$P),fit.mclust$classification)
 ```
 
 Match labels and compare means and variances 
 ```{r}
-j <- order(max.col(table(max.col(fit$P),fit.mclust$classification)))
-sapply(fit$mvn[j],function(p) p$mu)
-lapply(fit$mvn[j],function(p) p$Sigma)
+j <- order(max.col(table(max.col(fit$pars$P),fit.mclust$classification)))
+sapply(fit$pars$mvn[j],function(p) p$mu)
+lapply(fit$pars$mvn[j],function(p) p$Sigma)
 ```
 
 Compare to actual classification
 ```{r}
-table(max.col(fit$P),s$cl)
+table(max.col(fit$pars$P),s$cl)
 ```
 
 Match labels and compare means 
 ```{r}
-j <- order(max.col(table(max.col(fit$P),s$cl)))
+j <- order(max.col(table(max.col(fit$pars$P),s$cl)))
 t(s$Mu)
-sapply(fit$mvn[j],function(p) p$mu)
+sapply(fit$pars$mvn[j],function(p) p$mu)
 ```
 and variances
 ```{r}
 s$V
-lapply(fit$mvn[j],function(p) p$Sigma)
+lapply(fit$pars$mvn[j],function(p) p$Sigma)
 ```
 
 ## Single HHM sequence
@@ -189,19 +189,19 @@ fit <- mvnMix(s$y,km$cluster)
 
 Compare to actual classification
 ```{r}
-table(max.col(fit$P),s$cl)
+table(max.col(fit$pars$P),s$cl)
 ```
 
 Match labels and compare means 
 ```{r}
-j <- order(max.col(table(max.col(fit$P),s$cl)))
+j <- order(max.col(table(max.col(fit$pars$P),s$cl)))
 t(s$Mu)
-sapply(fit$mvn[j],function(p) p$mu)
+sapply(fit$pars$mvn[j],function(p) p$mu)
 ```
 and variances
 ```{r}
 s$V
-lapply(fit$mvn[j],function(p) p$Sigma)
+lapply(fit$pars$mvn[j],function(p) p$Sigma)
 ```
 
 
@@ -217,19 +217,19 @@ fit <- mvnHMM(s$y,km$cluster)
 
 Compare to actual classification
 ```{r}
-table(max.col(fit$P),s$cl)
+table(max.col(fit$pars$P),s$cl)
 ```
 
 Match labels and compare means 
 ```{r}
-j <- order(max.col(table(max.col(fit$P),s$cl)))
+j <- order(max.col(table(max.col(fit$pars$P),s$cl)))
 t(s$Mu)
-sapply(fit$mvn[j],function(p) p$mu)
+sapply(fit$pars$mvn[j],function(p) p$mu)
 ```
 and variances
 ```{r}
 s$V
-lapply(fit$mvn[j],function(p) p$Sigma)
+lapply(fit$pars$mvn[j],function(p) p$Sigma)
 ```
 and transition probabilities
 ```{r}
