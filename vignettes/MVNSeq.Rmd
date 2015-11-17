@@ -46,7 +46,7 @@ table(max.col(fit$P),fit.mclust$classification)
 
 Match labels and compare means and variances
 ```{r}
-j <- order(max.col(table(max.col(fit$P),fit.mclust$classification)))
+j <- order(max.col(table(max.col(fit$pars$P),fit.mclust$classification)))
 sapply(fit$mvn[j],function(p) p$mu)
 lapply(fit$mvn[j],function(p) p$Sigma)
 ```
