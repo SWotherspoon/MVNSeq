@@ -1,0 +1,240 @@
+---
+title: "Mixed Model"
+author: "S. Wotherspoon"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{MVNSeq}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+
+We consider a multivariate mixed model of the form
+\[
+\begin{align}
+y_{ij} &= a_{i} + \epsilon_{ij}\\
+a_{i} &\sim \operatorname{N}(\mu,\mathsf{U})\\
+\epsilon_{ij} &\sim \operatorname{N}(0,\mathsf{V})
+\end{align}
+\]
+where each \(y_{ij}\) is a \(q\) dimensional multivariate response such that \(y_{ij}\) is the \(j^{\mathrm{th}}\) response from subject \(i^{\mathrm{th}}\), \(\mathsf{U}\) is the variance of the random effects \(a_{i}\), and \(\mathsf{V}\) is the error variance.
+
+
+## EM Algorithm
+
+To apply the EM algorithm we must compute the expected values of the sufficient statistics
+\[
+\sum_{ij} (y_{ij}-a_{i})(y_{ij}-a_{i})^{T} \qquad
+\sum_{i} (a_{i}-\mu)(a_{i}-\mu)^{T}\qquad
+\sum_{i} a_{i}
+\]
+conditional on the observed data \(y\).
+
+The updated model parameters are then estimated as
+\[
+\begin{align}
+\mu &=  \frac{\operatorname{E}\left (\sum_{i} a_{i} \middle| y \right )}{m}\\
+U & = \frac{\operatorname{E}\left (\sum_{i} (a_{i}-\mu)(a_{i}-\mu)^{T} \middle| y \right )}{m}\\
+V & = \frac{\operatorname{E}\left(\sum_{ij} (y_{ij}-a_{i})(y_{ij}-a_{i})^{T} \middle| y \right )}{n}\\
+\end{align}
+\]
+
+The conditional distribution \(p(a_{i}|y)\) can be deduced from the from the conditional distribution \(p(a|y)\).  Writing
+\[
+a_{i} | y \sim \operatorname{N}(\alpha_{i},A_{i})
+\]
+we deduce that
+\[
+\operatorname{E}\left (\sum_{i} a_{i} \middle| y \right )= \sum_{i} \alpha_{i}
+\]
+and
+\[
+\operatorname{E}\left (\sum_{i} (a_{i}-\mu)(a_{i}-\mu)^{T} \middle| y \right )=
+\sum_{i} \left ( (\alpha_{i}-\mu) (\alpha_{i}-\mu)^{T} + A_{i} \right )
+\]
+while
+\[
+\sum_{ij} (y_{ij}-a_{i})(y_{ij}-a_{i})^{T} = \sum_{i} \left (\sum_{j} (y_{ij}-\bar{y}_{i.})(y_{ij}-\bar{y}_{i.})^{T}+n_{i}(\bar{y}_{i.}-a_{i})(\bar{y}_{i.}-a_{i})^{T} \right )
+\]
+so that
+\[
+\begin{multline}
+\operatorname{E}\left(\sum_{ij} (y_{ij}-a_{i})(y_{ij}-a_{i})^{T} \middle| y \right ) =\\
+\sum_{i} \left (\sum_{j} (y_{ij}-\bar{y}_{i.})(y_{ij}-\bar{y}_{i.})^{T}+
+n_{i}\left (
+(\bar{y}_{i.}-\alpha_{i})(\bar{y}_{i.}-\alpha_{i})^{T} + A_{i}
+\right )
+\right )
+\end{multline}
+\]
+
+
+## Conditional Distribution
+
+The EM Algorithm requires the conditional expectations of the sufficient statistics given the observed data \(y\).  The required conditional expectations can all be computed from the conditional distribution \(p(a|y)\) of \(a\) given the observed data \(y\).
+
+### Vector representation
+To compute the conditional distribution \(p(a|y)\), we write the model in a vector format
+\[
+y = Z a + \epsilon
+\]
+where \(y\), \(e\) and \(a\) are vectors constructed as the concatenations of the \(y_{ij}\), \( \epsilon_{ij}\) and \(a_{i}\) respectively, \(Z\) is a block structured design matrix
+\[
+Z =
+\begin{bmatrix}
+I & 0 & 0 &\ldots & 0\\
+\vdots & \vdots & \vdots & & \vdots\\
+0 & I & 0 &\ldots & 0\\
+\vdots & \vdots & \vdots & & \vdots\\
+0 & 0 & I &\ldots & 0\\
+\vdots & \vdots & \vdots & & \vdots\\
+0 & 0 & 0 & \ldots & I\\
+\end{bmatrix}
+\]
+that disseminates the elements of \(a\) to the appropriate elements of \(y\), and
+\[
+\begin{align}
+a &\sim \operatorname{N}(X \mu,U)\\
+\epsilon &\sim \operatorname{N}(0,V)
+\end{align}
+\]
+where \(X\) is a block structured design matrix that disseminates the elements of \(\mu\) to the appropriate elements of \(a\) and \(U\) and \(V\) are the block diagonal matrices
+\[
+\begin{gather}
+U = \begin{bmatrix}
+\mathsf{U}&&&&\\
+&\mathsf{U}&&&\\
+&&\ddots&&\\
+&&&\mathsf{U}&\\
+&&&&\mathsf{U}
+\end{bmatrix}
+&
+V = \begin{bmatrix}
+\mathsf{V}&&&&\\
+&\mathsf{V}&&&\\
+&&\ddots&&\\
+&&&\mathsf{V}&\\
+&&&&\mathsf{V}
+\end{bmatrix}
+\end{gather}
+\]
+
+This implies that
+\[
+\begin{bmatrix}
+a \\
+\epsilon
+\end{bmatrix}
+\sim
+\operatorname{N} \left (
+\begin{bmatrix}
+X\mu \\
+0
+\end{bmatrix},
+\begin{bmatrix}
+U & 0 \\
+0 & V
+\end{bmatrix}
+\right )
+\]
+
+### Conditional for \(a\)
+To compute the conditional distribution of \(a\) given \(y\), note that
+\[
+\begin{bmatrix}
+a \\
+y
+\end{bmatrix}
+=
+\begin{bmatrix}
+I & 0 \\
+Z & I
+\end{bmatrix}
+\begin{bmatrix}
+a \\
+\epsilon
+\end{bmatrix}
+\]
+and
+\[
+\begin{bmatrix}
+I & 0 \\
+Z & I
+\end{bmatrix}
+\begin{bmatrix}
+U & 0 \\
+0 & V
+\end{bmatrix}
+\begin{bmatrix}
+I & 0 \\
+Z & I
+\end{bmatrix}^{T}
+ =
+\begin{bmatrix}
+U & 0 \\
+ZU & V
+\end{bmatrix}
+\begin{bmatrix}
+I & Z^{T} \\
+0 & I
+\end{bmatrix}
+=\begin{bmatrix}
+U & UZ^{T} \\
+ZU & ZUZ^{T}+V
+\end{bmatrix}
+\]
+so that
+\[
+\begin{bmatrix}
+a \\
+y
+\end{bmatrix}
+\sim
+\operatorname{N} \left (
+\begin{bmatrix}
+X \\
+ZX
+\end{bmatrix} \mu,
+\begin{bmatrix}
+U & UZ^{T} \\
+ZU & ZUZ^{T}+V
+\end{bmatrix}
+\right ).
+\]
+
+The conditional distribution of \(a\) given \(y\) is
+\[
+a | y
+\sim
+\operatorname{N} \left (
+X\mu+UZ^{T}(ZUZ^{T}+V)^{-1} (y - ZX\mu),
+U - UZ^{T} (ZUZ^{T}+V)^{-1} ZU
+\right ).
+\]
+
+Using the Woodbury identities this can be written in the form
+\[
+a | y
+\sim
+\operatorname{N} \left (
+X\mu + (U^{-1}+Z^{T}V^{-1}Z)^{-1}Z^{T}V^{-1} (y - ZX\mu),
+(U^{-1}+Z^{T}V^{-1}Z)^{-1}
+\right ).
+\]
+
+## Block Matrices
+
+The block structured design and covariance matrices \(Z\), \(U\) and \(V\) can be written as kronecker products
+\[
+\begin{align}
+X &= I_{m} \otimes I_{q}\\
+Z &= G \otimes I_{q}\\
+U &= I_{m} \otimes \mathsf{U}\\
+V &= I_{n} \otimes \mathsf{V}\\
+\end{align}
+\]
+where \(n\) denotes the total number of observations, \(q\) the dimension of each observation, \(I_{r}\) the \(r \times r\) identity matrix, \(1_{r}\) a column vector of \(r\) ones, \(G\) a matrix of ones denoting the structure of observations within subjects, \(\mathsf{U}\) the covariance matrix of the random effects and \(\mathsf{V}\) the covariance of a single observation about its mean.
+
+
