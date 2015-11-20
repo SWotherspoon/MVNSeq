@@ -101,8 +101,8 @@ initGroup <- function(K,pars) {
   ## Estimate population parameters from group parameters
   for(k in 1:K) {
     mus <- t(sapply(pars,function(par) par$mvn[[k]]$mu))
-    V <- rowMeans(sapply(pars,function(par) as.vector(par$mvn[[k]]$Sigma)))
-    V <- matrix(V,sqrt(length(V)),sqrt(length(V)))
+    V <- sapply(pars,function(par) par$mvn[[k]]$Sigma,simplify="array")
+    V <- if(!is.null(dim(V))) apply(V,1:2,mean) else matrix(mean(V),1,1)
     muv[[k]] <- list(mu=colMeans(mus),U=cov(mus),V=V)
     for(g in seq_along(pars)) pars[[g]]$mvn[[k]]$Sigma <- V
   }
@@ -956,36 +956,44 @@ grmvnHMM <- function(y,cl,gr,
 
 
 ## Lots of print methods.
+
+##' @export
 print.mvnmix <- function(x,...) {
   cat("Normal Mixture Model\n")
   print(data.frame(Components=x$K,`log L`=x$logL,AIC=x$AIC,BIC=x$BIC,check.names=F),row.names="")
 }
 
+##' @export
 print.gmvnmix <- function(x,...) {
   cat("Grouped Normal Mixture Model\n")
   print(data.frame(Components=x$K,`log L`=x$logL,AIC=x$AIC,BIC=x$BIC,check.names=F),row.names="")
 }
 
+##' @export
 print.grmvnmix <- function(x,...) {
   cat("Grouped Random Normal Mixture Model\n")
   print(data.frame(Components=x$K,`log L`=x$logL,AIC=x$AIC,BIC=x$BIC,check.names=F),row.names="")
 }
 
+##' @export
 print.mvnhmm <- function(x,...) {
   cat("Normal Hidden Markov Model\n")
   print(data.frame(Components=x$K,`log L`=x$logL,AIC=x$AIC,BIC=x$BIC,check.names=F),row.names="")
 }
 
+##' @export
 print.gmvnhmm <- function(x,...) {
   cat("Grouped Normal Hidden Markov Model\n")
   print(data.frame(Components=x$K,`log L`=x$logL,AIC=x$AIC,BIC=x$BIC,check.names=F),row.names="")
 }
 
+##' @export
 print.grmvnhmm <- function(x,...) {
   cat("Grouped Random Normal Hidden Markov Model\n")
   print(data.frame(Components=x$K,`log L`=x$logL,AIC=x$AIC,BIC=x$BIC,check.names=F),row.names="")
 }
 
+##' @export
 print.hmmpars <- function(x,...) {
   cat("Hidden Markov Model ",x$K," States\n\n")
   cat("Prior probability\n")
@@ -1000,7 +1008,7 @@ print.hmmpars <- function(x,...) {
   }
 }
 
-
+##' @export
 print.mixpars <- function(x,...) {
   cat("Normal Mixture: ",x$K," Components\n\n")
   cat("Mixing fractions\n")
@@ -1013,6 +1021,7 @@ print.mixpars <- function(x,...) {
   }
 }
 
+##' @export
 print.rcpars <- function(x,...) {
   cat("Random Components Model\n")
   for(k in seq_along(x)) {
