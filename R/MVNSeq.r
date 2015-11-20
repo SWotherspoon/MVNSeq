@@ -540,13 +540,15 @@ hmm2EMStep <- function(K,y,pars,formula1,formula2,data) {
 ##' @param y the sequence of observations
 ##' @param cl an integer vector allocating observations to classes
 ##' @param gr an integer vector allocating observations to groups
-##' @param common.fractions should the mixing fractions be common across groups
 ##' @param min.iters minimum number of EM iterations
 ##' @param max.iters maximum number of EM iterations
 ##' @param tol tolerance for the log likelihood
+##' @param common.fractions should the mixing fractions be common across groups
+##' @param verbose should the log likelihood be reported.
 ##' @return the fitted model
 ##' @export
-mvnMix <- function(y,cl,min.iters=10,max.iters=50,tol=1.0E-3) {
+mvnMix <- function(y,cl,min.iters=10,max.iters=50,tol=1.0E-3,
+                   verbose=interactive()) {
 
   K <- max(cl)
   pars <- initMix(y,cl)
@@ -554,10 +556,10 @@ mvnMix <- function(y,cl,min.iters=10,max.iters=50,tol=1.0E-3) {
   ## Initialize
   logL <- logL0 <- -Inf
   iter <- 0
+  str <- ""
 
   ## EM iteration
-  while(iter < min.iters ||
-        (iter < max.iters && abs(logL-logL0) > tol)) {
+  while(iter < min.iters || (iter < max.iters && abs(logL-logL0) > tol)) {
 
     ## Bookkeeping
     iter <- iter+1
@@ -566,6 +568,12 @@ mvnMix <- function(y,cl,min.iters=10,max.iters=50,tol=1.0E-3) {
     ## Update posterior probabilities of class membership
     pars <- mixEMStep(K,y,pars)
     logL <- pars$logL
+    if(verbose) {
+      if(nchar(str)) cat(paste(rep("\b",nchar(str)),collapse=""))
+      str <- sprintf("Log L: %0.3f",logL)
+      cat(str)
+      flush.console()
+    }
 
     ## Update means and covariances
     pars <- mvnEMStep(K,y,pars)
@@ -588,8 +596,9 @@ mvnMix <- function(y,cl,min.iters=10,max.iters=50,tol=1.0E-3) {
 ##' @rdname mvnMix
 ##' @export
 gmvnMix <- function(y,cl,gr,
-                     common.fractions=FALSE,
-                     min.iters=10,max.iters=50,tol=1.0E-3) {
+                    common.fractions=FALSE,
+                    min.iters=10,max.iters=50,tol=1.0E-3,
+                    verbose=interactive()) {
 
   K <- max(cl)
   ys <- split.data.frame(y,gr)
@@ -605,9 +614,9 @@ gmvnMix <- function(y,cl,gr,
 
   logL0 <- logL <- -Inf
   iter <- 0
+  str <- ""
   ## EM iteration
-  while(iter < min.iters ||
-        (iter < max.iters && abs(logL-logL0) > tol)) {
+  while(iter < min.iters || (iter < max.iters && abs(logL-logL0) > tol)) {
 
     ## Bookkeeping
     iter <- iter+1
@@ -630,7 +639,12 @@ gmvnMix <- function(y,cl,gr,
 
     ## Total log likelihood
     logL <- sum(sapply(pars,"[[","logL"))
-    print(logL)
+    if(verbose) {
+      if(nchar(str)) cat(paste(rep("\b",nchar(str)),collapse=""))
+      str <- sprintf("Log L: %0.3f",logL)
+      cat(str)
+      flush.console()
+    }
 
     ## Update means and covariances
     pars <- gmvnEMStep(K,ys,pars)
@@ -659,7 +673,8 @@ gmvnMix <- function(y,cl,gr,
 ##' @export
 grmvnMix <- function(y,cl,gr,
                      common.fractions=FALSE,
-                     min.iters=10,max.iters=100,tol=1.0E-3) {
+                     min.iters=10,max.iters=100,tol=1.0E-3,
+                     verbose=interactive()) {
 
   K <- max(cl)
   ys <- split.data.frame(y,gr)
@@ -677,9 +692,9 @@ grmvnMix <- function(y,cl,gr,
 
   logL0 <- logL <- -Inf
   iter <- 0
+  str <- ""
   ## EM iteration
-  while(iter < min.iters ||
-        (iter < max.iters && abs(logL-logL0) > tol)) {
+  while(iter < min.iters || (iter < max.iters && abs(logL-logL0) > tol)) {
 
     ## Bookkeeping
     iter <- iter+1
@@ -707,7 +722,12 @@ grmvnMix <- function(y,cl,gr,
       for(k in 1:K)
         logL <- logL+dmvnorm(pars[[g]]$mvn[[k]]$mu,muv[[k]]$mu,muv[[k]]$U,log=T)
     }
-    print(logL)
+    if(verbose) {
+      if(nchar(str)) cat(paste(rep("\b",nchar(str)),collapse=""))
+      str <- sprintf("Log L: %0.3f",logL)
+      cat(str)
+      flush.console()
+    }
 
     ## Update means, random effects and covariances
     fit <- grmvnEMStep(K,ys,pars,muv)
@@ -757,7 +777,8 @@ grmvnMix <- function(y,cl,gr,
 ##' @param tol tolerance for the log likelihood
 ##' @return the fitted model
 ##' @export
-mvnHMM <- function(y,cl,min.iters=10,max.iters=50,tol=1.0E-3) {
+mvnHMM <- function(y,cl,min.iters=10,max.iters=50,tol=1.0E-3,
+                   verbose=interactive()) {
 
 
   K <- max(cl)
@@ -766,9 +787,9 @@ mvnHMM <- function(y,cl,min.iters=10,max.iters=50,tol=1.0E-3) {
 
   logL0 <- logL <- -Inf
   iter <- 0
+  str <- ""
   ## EM iteration
-  while(iter < min.iters ||
-        (iter < max.iters && abs(logL-logL0) > tol)) {
+  while(iter < min.iters || (iter < max.iters && abs(logL-logL0) > tol)) {
 
     ## Bookkeeping
     iter <- iter+1
@@ -777,6 +798,13 @@ mvnHMM <- function(y,cl,min.iters=10,max.iters=50,tol=1.0E-3) {
     ## Fit HMM
     pars <- hmmEMStep(K,y,pars)
     logL <- pars$logL
+
+    if(verbose) {
+      if(nchar(str)) cat(paste(rep("\b",nchar(str)),collapse=""))
+      str <- sprintf("Log L: %0.3f",logL)
+      cat(str)
+      flush.console()
+    }
 
     ## Update means and covariances
     pars <- mvnEMStep(K,y,pars)
@@ -803,7 +831,8 @@ mvnHMM <- function(y,cl,min.iters=10,max.iters=50,tol=1.0E-3) {
 #' @export
 gmvnHMM <- function(y,cl,gr,
                     common.transition=FALSE,
-                    min.iters=10,max.iters=50,tol=1.0E-3) {
+                    min.iters=10,max.iters=50,tol=1.0E-3,
+                    verbose=interactive()) {
 
   K <- max(cl)
   ys <- split.data.frame(y,gr)
@@ -819,9 +848,9 @@ gmvnHMM <- function(y,cl,gr,
 
   logL0 <- logL <- -Inf
   iter <- 0
+  str <- ""
   ## EM iteration
-  while(iter < min.iters ||
-        (iter < max.iters && abs(logL-logL0) > tol)) {
+  while(iter < min.iters || (iter < max.iters && abs(logL-logL0) > tol)) {
 
     ## Bookkeeping
     iter <- iter+1
@@ -848,7 +877,13 @@ gmvnHMM <- function(y,cl,gr,
 
     ## Total log likelihood
     logL <- sum(sapply(pars,"[[","logL"))
-    print(logL)
+
+    if(verbose) {
+      if(nchar(str)) cat(paste(rep("\b",nchar(str)),collapse=""))
+      str <- sprintf("Log L: %0.3f",logL)
+      cat(str)
+      flush.console()
+    }
 
     ## Update means and covariances
     pars <- gmvnEMStep(K,ys,pars)
@@ -875,7 +910,8 @@ gmvnHMM <- function(y,cl,gr,
 #' @export
 grmvnHMM <- function(y,cl,gr,
                      common.transition=FALSE,
-                     min.iters=10,max.iters=100,tol=1.0E-3) {
+                     min.iters=10,max.iters=100,tol=1.0E-3,
+                     verbose=interactive()) {
 
   K <- max(cl)
   ys <- split.data.frame(y,gr)
@@ -893,9 +929,9 @@ grmvnHMM <- function(y,cl,gr,
 
   logL0 <- logL <- -Inf
   iter <- 0
+  str <- ""
   ## EM iteration
-  while(iter < min.iters ||
-        (iter < max.iters && abs(logL-logL0) > tol)) {
+  while(iter < min.iters || (iter < max.iters && abs(logL-logL0) > tol)) {
 
     ## Bookkeeping
     iter <- iter+1
@@ -927,7 +963,12 @@ grmvnHMM <- function(y,cl,gr,
       for(k in 1:K)
         logL <- logL+dmvnorm(pars[[g]]$mvn[[k]]$mu,muv[[k]]$mu,muv[[k]]$U,log=T)
     }
-    print(logL)
+    if(verbose) {
+      if(nchar(str)) cat(paste(rep("\b",nchar(str)),collapse=""))
+      str <- sprintf("Log L: %0.3f",logL)
+      cat(str)
+      flush.console()
+    }
 
     ## Update means, random effects and covariances
     fit <- grmvnEMStep(K,ys,pars,muv)
@@ -1063,11 +1104,13 @@ print.rcpars <- function(x,...) {
 ##' @param min.iters minimum number of EM iterations
 ##' @param max.iters maximum number of EM iterations
 ##' @param tol tolerance for the log likelihood
+##' @param verbose should the log likelihood be reported.
 ##' @return the fitted model
 ##' @export
 mvnHMM2 <- function(y,cl,
                     formula1,formula2,data,
-                    min.iters=10,max.iters=50,tol=1.0E-3) {
+                    min.iters=10,max.iters=50,tol=1.0E-3,
+                    verbose=interactive()) {
 
   K <- 2
   n <- nrow(y)
@@ -1075,6 +1118,7 @@ mvnHMM2 <- function(y,cl,
 
   logL0 <- logL <- -Inf
   iter <- 0
+  str <- ""
   ## EM iteration
   while(iter < min.iters ||
         (iter < max.iters && abs(logL-logL0) > tol)) {
@@ -1085,7 +1129,12 @@ mvnHMM2 <- function(y,cl,
     ## Fit HMM to this group
     pars <- hmm2EMStep(K,y,pars,formula1,formula2,data)
     logL <- pars$logL
-    print(logL)
+    if(verbose) {
+      if(nchar(str)) cat(paste(rep("\b",nchar(str)),collapse=""))
+      str <- sprintf("Log L: %0.3f",logL)
+      cat(str)
+      flush.console()
+    }
 
     ## Update means and covariances
     pars <- mvnEMStep(K,y,pars)
@@ -1107,8 +1156,9 @@ mvnHMM2 <- function(y,cl,
 #' @rdname mvnHMM2
 #' @export
 gmvnHMM2 <- function(y,cl,gr,
-                      formula1,formula2,data,
-                      min.iters=10,max.iters=50,tol=1.0E-3) {
+                     formula1,formula2,data,
+                     min.iters=10,max.iters=50,tol=1.0E-3,
+                     verbose=interactive()) {
 
   K <- 2
   ys <- split.data.frame(y,gr)
@@ -1125,6 +1175,7 @@ gmvnHMM2 <- function(y,cl,gr,
 
   logL0 <- logL <- -Inf
   iter <- 0
+  str <- ""
   ## EM iteration
   while(iter < min.iters ||
         (iter < max.iters && abs(logL-logL0) > tol)) {
@@ -1141,7 +1192,12 @@ gmvnHMM2 <- function(y,cl,gr,
 
     ## Total log likelihood
     logL <- sum(sapply(pars,"[[","logL"))
-    print(logL)
+    if(verbose) {
+      if(nchar(str)) cat(paste(rep("\b",nchar(str)),collapse=""))
+      str <- sprintf("Log L: %0.3f",logL)
+      cat(str)
+      flush.console()
+    }
 
     ## Update means and covariances
     pars <- gmvnEMStep(K,ys,pars)
@@ -1167,7 +1223,8 @@ gmvnHMM2 <- function(y,cl,gr,
 #' @export
 grmvnHMM2 <- function(y,cl,gr,
                       formula1,formula2,data,
-                      min.iters=10,max.iters=100,tol=1.0E-3) {
+                      min.iters=10,max.iters=100,tol=1.0E-3,
+                      verbose=interactive()) {
 
   K <- 2
   ys <- split.data.frame(y,gr)
@@ -1186,6 +1243,7 @@ grmvnHMM2 <- function(y,cl,gr,
 
   logL0 <- logL <- -Inf
   iter <- 0
+  str <- ""
   ## EM iteration
   while(iter < min.iters ||
         (iter < max.iters && abs(logL-logL0) > tol)) {
@@ -1207,7 +1265,12 @@ grmvnHMM2 <- function(y,cl,gr,
       for(k in 1:K)
         logL <- logL+dmvnorm(pars[[g]]$mvn[[k]]$mu,muv[[k]]$mu,muv[[k]]$U,log=T)
     }
-    print(logL)
+    if(verbose) {
+      if(nchar(str)) cat(paste(rep("\b",nchar(str)),collapse=""))
+      str <- sprintf("Log L: %0.3f",logL)
+      cat(str)
+      flush.console()
+    }
 
     ## Update means, random effects and covariances
     fit <- grmvnEMStep(K,ys,pars,muv)

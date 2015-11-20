@@ -7,13 +7,13 @@
 \title{Multivariate Normal Hidden Markov Model}
 \usage{
 mvnHMM2(y, cl, formula1, formula2, data, min.iters = 10, max.iters = 50,
-  tol = 0.001)
+  tol = 0.001, verbose = interactive())
 
 gmvnHMM2(y, cl, gr, formula1, formula2, data, min.iters = 10,
-  max.iters = 50, tol = 0.001)
+  max.iters = 50, tol = 0.001, verbose = interactive())
 
 grmvnHMM2(y, cl, gr, formula1, formula2, data, min.iters = 10,
-  max.iters = 100, tol = 0.001)
+  max.iters = 100, tol = 0.001, verbose = interactive())
 }
 \arguments{
 \item{y}{the sequence of observations}
@@ -31,6 +31,8 @@ grmvnHMM2(y, cl, gr, formula1, formula2, data, min.iters = 10,
 \item{max.iters}{maximum number of EM iterations}
 
 \item{tol}{tolerance for the log likelihood}
+
+\item{verbose}{should the log likelihood be reported.}
 
 \item{gr}{an integer vector allocating observations to groups}
 }

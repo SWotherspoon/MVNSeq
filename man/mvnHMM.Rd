@@ -6,13 +6,14 @@
 \alias{mvnHMM}
 \title{Multivariate Normal Mixture Model}
 \usage{
-mvnHMM(y, cl, min.iters = 10, max.iters = 50, tol = 0.001)
+mvnHMM(y, cl, min.iters = 10, max.iters = 50, tol = 0.001,
+  verbose = interactive())
 
 gmvnHMM(y, cl, gr, common.transition = FALSE, min.iters = 10,
-  max.iters = 50, tol = 0.001)
+  max.iters = 50, tol = 0.001, verbose = interactive())
 
 grmvnHMM(y, cl, gr, common.transition = FALSE, min.iters = 10,
-  max.iters = 100, tol = 0.001)
+  max.iters = 100, tol = 0.001, verbose = interactive())
 }
 \arguments{
 \item{y}{the sequence of observations}

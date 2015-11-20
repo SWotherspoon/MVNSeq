@@ -6,13 +6,14 @@
 \alias{mvnMix}
 \title{Multivariate Normal Mixture Models}
 \usage{
-mvnMix(y, cl, min.iters = 10, max.iters = 50, tol = 0.001)
+mvnMix(y, cl, min.iters = 10, max.iters = 50, tol = 0.001,
+  verbose = interactive())
 
 gmvnMix(y, cl, gr, common.fractions = FALSE, min.iters = 10,
-  max.iters = 50, tol = 0.001)
+  max.iters = 50, tol = 0.001, verbose = interactive())
 
 grmvnMix(y, cl, gr, common.fractions = FALSE, min.iters = 10,
-  max.iters = 100, tol = 0.001)
+  max.iters = 100, tol = 0.001, verbose = interactive())
 }
 \arguments{
 \item{y}{the sequence of observations}
@@ -24,6 +25,8 @@ grmvnMix(y, cl, gr, common.fractions = FALSE, min.iters = 10,
 \item{max.iters}{maximum number of EM iterations}
 
 \item{tol}{tolerance for the log likelihood}
+
+\item{verbose}{should the log likelihood be reported.}
 
 \item{gr}{an integer vector allocating observations to groups}
 
