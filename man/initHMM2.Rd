@@ -16,8 +16,6 @@ initHMM2(y, cl, formula1, formula2, data)
 \item{formula2}{formula for the logistic model relating the transition from state 2 to state 1 to the covariates}
 
 \item{data}{a dataframe of covariates}
-
-\item{K}{the number of classes}
 }
 \value{
 estimated model parameters

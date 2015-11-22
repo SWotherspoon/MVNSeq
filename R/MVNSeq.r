@@ -124,7 +124,6 @@ initGroup <- function(K,pars) {
 ##' @param formula1 formula for the logistic model relating the transition from state 1 to state 2 to the covariates
 ##' @param formula2 formula for the logistic model relating the transition from state 2 to state 1 to the covariates
 ##' @param data a dataframe of covariates
-##' @param K the number of classes
 ##' @return estimated model parameters
 initHMM2 <- function(y,cl,formula1,formula2,data) {
 
