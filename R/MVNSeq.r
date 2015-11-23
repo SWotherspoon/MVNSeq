@@ -774,6 +774,7 @@ grmvnMix <- function(y,cl,gr,
 ##' @param min.iters minimum number of EM iterations
 ##' @param max.iters maximum number of EM iterations
 ##' @param tol tolerance for the log likelihood
+##' @param verbose should the log likelihood be reported.
 ##' @return the fitted model
 ##' @export
 mvnHMM <- function(y,cl,min.iters=10,max.iters=50,tol=1.0E-3,

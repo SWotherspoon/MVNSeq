@@ -26,6 +26,8 @@ grmvnHMM(y, cl, gr, common.transition = FALSE, min.iters = 10,
 
 \item{tol}{tolerance for the log likelihood}
 
+\item{verbose}{should the log likelihood be reported.}
+
 \item{gr}{an integer vector allocating observations to groups}
 
 \item{common.transition}{should the transition probabilities be common across groups}
