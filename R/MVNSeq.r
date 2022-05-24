@@ -69,7 +69,7 @@ NULL
 initMix <- function(y,cl,K=max(cl)) {
   ## Component means and variances
   mvn <- lapply(1:K,function(k) {
-    yk <- y[cl==k,,drop=F]
+    yk <- y[cl==k,,drop=FALSE]
     list(mu=colMeans(yk),Sigma=cov(yk))
   })
 
@@ -136,7 +136,7 @@ initHMM2 <- function(y,cl,formula1,formula2,data) {
   K <- 2
   ## Component means and variances
   mvn <- lapply(1:K,function(k) {
-    yk <- y[cl==k,,drop=F]
+    yk <- y[cl==k,,drop=FALSE]
     list(mu=colMeans(yk),Sigma=cov(yk))
   })
 
@@ -341,7 +341,7 @@ hmmEMStep <- function(K,y,pars) {
 
   ## logF[i,j] = log p(y_{i}|s_{i}=j)
   for(j in 1:K)
-    logF[,j] <- dmvnorm(y,mvn[[j]]$mu,mvn[[j]]$Sigma,log=T)
+    logF[,j] <- dmvnorm(y,mvn[[j]]$mu,mvn[[j]]$Sigma,log=TRUE)
 
   ## logf[i] = log p(y_{1}|s_{1}=i)
   logf <- logF[1,]
@@ -449,7 +449,7 @@ hmm2EMStep <- function(K,y,pars,formula1,formula2,data) {
 
   ## logF[i,j] = log p(y_{i}|s_{i}=j)
   for(j in 1:K)
-    logF[,j] <- dmvnorm(y,mvn[[j]]$mu,mvn[[j]]$Sigma,log=T)
+    logF[,j] <- dmvnorm(y,mvn[[j]]$mu,mvn[[j]]$Sigma,log=TRUE)
 
   ## logf[i] = log p(y_{1}|s_{1}=i)
   logf <- logF[1,]
@@ -731,7 +731,7 @@ grmvnMix <- function(y,cl,gr,
     for(g in seq_along(ys)) {
       logL <- logL + pars[[g]]$logL
       for(k in 1:K)
-        logL <- logL+dmvnorm(pars[[g]]$mvn[[k]]$mu,muv[[k]]$mu,muv[[k]]$U,log=T)
+        logL <- logL+dmvnorm(pars[[g]]$mvn[[k]]$mu,muv[[k]]$mu,muv[[k]]$U,log=TRUE)
     }
     if(verbose) {
       if(nchar(str)) cat(paste(rep("\b",nchar(str)),collapse=""))
@@ -975,7 +975,7 @@ grmvnHMM <- function(y,cl,gr,
     for(g in seq_along(ys)) {
       logL <- logL + pars[[g]]$logL
       for(k in 1:K)
-        logL <- logL+dmvnorm(pars[[g]]$mvn[[k]]$mu,muv[[k]]$mu,muv[[k]]$U,log=T)
+        logL <- logL+dmvnorm(pars[[g]]$mvn[[k]]$mu,muv[[k]]$mu,muv[[k]]$U,log=TRUE)
     }
     if(verbose) {
       if(nchar(str)) cat(paste(rep("\b",nchar(str)),collapse=""))
@@ -1016,7 +1016,7 @@ grmvnHMM <- function(y,cl,gr,
 print.mvnmix <- function(x,...) {
   cat("Normal Mixture Model\n")
   print(data.frame(Components=x$K,`log L`=x$logL,AIC=x$AIC,BIC=x$BIC,
-                   check.names=F),
+                   check.names=FALSE),
         row.names="")
 }
 
@@ -1024,7 +1024,7 @@ print.mvnmix <- function(x,...) {
 print.gmvnmix <- function(x,...) {
   cat("Grouped Normal Mixture Model\n")
   print(data.frame(Components=x$K,`log L`=x$logL,AIC=x$AIC,BIC=x$BIC,
-                   check.names=F),
+                   check.names=FALSE),
         row.names="")
 }
 
@@ -1032,7 +1032,7 @@ print.gmvnmix <- function(x,...) {
 print.grmvnmix <- function(x,...) {
   cat("Grouped Random Normal Mixture Model\n")
   print(data.frame(Components=x$K,`log L`=x$logL,AIC=x$AIC,BIC=x$BIC,
-                   check.names=F),
+                   check.names=FALSE),
         row.names="")
 }
 
@@ -1040,7 +1040,7 @@ print.grmvnmix <- function(x,...) {
 print.mvnhmm <- function(x,...) {
   cat("Normal Hidden Markov Model\n")
   print(data.frame(Components=x$K,`log L`=x$logL,AIC=x$AIC,BIC=x$BIC,
-                   check.names=F),
+                   check.names=FALSE),
         row.names="")
 }
 
@@ -1048,7 +1048,7 @@ print.mvnhmm <- function(x,...) {
 print.gmvnhmm <- function(x,...) {
   cat("Grouped Normal Hidden Markov Model\n")
   print(data.frame(Components=x$K,`log L`=x$logL,AIC=x$AIC,BIC=x$BIC,
-                   check.names=F),
+                   check.names=FALSE),
         row.names="")
 }
 
@@ -1056,7 +1056,7 @@ print.gmvnhmm <- function(x,...) {
 print.grmvnhmm <- function(x,...) {
   cat("Grouped Random Normal Hidden Markov Model\n")
   print(data.frame(Components=x$K,`log L`=x$logL,AIC=x$AIC,BIC=x$BIC,
-                   check.names=F),
+                   check.names=FALSE),
         row.names="")
 }
 
@@ -1291,7 +1291,7 @@ grmvnHMM2 <- function(y,cl,gr,
     for(g in seq_along(ys)) {
       logL <- logL + pars[[g]]$logL
       for(k in 1:K)
-        logL <- logL+dmvnorm(pars[[g]]$mvn[[k]]$mu,muv[[k]]$mu,muv[[k]]$U,log=T)
+        logL <- logL+dmvnorm(pars[[g]]$mvn[[k]]$mu,muv[[k]]$mu,muv[[k]]$U,log=TRUE)
     }
     if(verbose) {
       if(nchar(str)) cat(paste(rep("\b",nchar(str)),collapse=""))
