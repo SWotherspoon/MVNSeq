@@ -4,7 +4,7 @@ author: "S. Wotherspoon"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{MVNSeq}
+  %\VignetteIndexEntry{Mixed Model}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -19,7 +19,9 @@ a_{i} &\sim \operatorname{N}(\mu,\mathsf{U})\\
 \epsilon_{ij} &\sim \operatorname{N}(0,\mathsf{V})
 \end{align}
 \]
-where each \(y_{ij}\) is a \(q\) dimensional multivariate response such that \(y_{ij}\) is the \(j^{\mathrm{th}}\) response from subject \(i^{\mathrm{th}}\), \(\mathsf{U}\) is the variance of the random effects \(a_{i}\), and \(\mathsf{V}\) is the error variance.
+where each \(y_{ij}\) is a \(q\) dimensional multivariate response such that \(y_{ij}\) is the
+\(j^{\mathrm{th}}\) response from subject \(i^{\mathrm{th}}\), \(\mathsf{U}\) is the variance of the
+random effects \(a_{i}\), and \(\mathsf{V}\) is the error variance.
 
 
 ## EM Algorithm
@@ -41,7 +43,8 @@ V & = \frac{\operatorname{E}\left(\sum_{ij} (y_{ij}-a_{i})(y_{ij}-a_{i})^{T} \mi
 \end{align}
 \]
 
-The conditional distribution \(p(a_{i}|y)\) can be deduced from the from the conditional distribution \(p(a|y)\).  Writing
+The conditional distribution \(p(a_{i}|y)\) can be deduced from the from the conditional
+distribution \(p(a|y)\).  Writing
 \[
 a_{i} | y \sim \operatorname{N}(\alpha_{i},A_{i})
 \]
@@ -56,7 +59,10 @@ and
 \]
 while
 \[
-\sum_{ij} (y_{ij}-a_{i})(y_{ij}-a_{i})^{T} = \sum_{i} \left (\sum_{j} (y_{ij}-\bar{y}_{i.})(y_{ij}-\bar{y}_{i.})^{T}+n_{i}(\bar{y}_{i.}-a_{i})(\bar{y}_{i.}-a_{i})^{T} \right )
+\sum_{ij} (y_{ij}-a_{i})(y_{ij}-a_{i})^{T} = 
+\sum_{i} \left (
+\sum_{j} (y_{ij}-\bar{y}_{i.})(y_{ij}-\bar{y}_{i.})^{T}+n_{i}(\bar{y}_{i.}-a_{i})(\bar{y}_{i.}-a_{i})^{T} 
+\right )
 \]
 so that
 \[
@@ -73,14 +79,17 @@ n_{i}\left (
 
 ## Conditional Distribution
 
-The EM Algorithm requires the conditional expectations of the sufficient statistics given the observed data \(y\).  The required conditional expectations can all be computed from the conditional distribution \(p(a|y)\) of \(a\) given the observed data \(y\).
+The EM Algorithm requires the conditional expectations of the sufficient statistics given the
+observed data \(y\).  The required conditional expectations can all be computed from the conditional
+distribution \(p(a|y)\) of \(a\) given the observed data \(y\).
 
 ### Vector representation
 To compute the conditional distribution \(p(a|y)\), we write the model in a vector format
 \[
 y = Z a + \epsilon
 \]
-where \(y\), \(e\) and \(a\) are vectors constructed as the concatenations of the \(y_{ij}\), \( \epsilon_{ij}\) and \(a_{i}\) respectively, \(Z\) is a block structured design matrix
+where \(y\), \(e\) and \(a\) are vectors constructed as the concatenations of the \(y_{ij}\), \(
+\epsilon_{ij}\) and \(a_{i}\) respectively, \(Z\) is a block structured design matrix
 \[
 Z =
 \begin{bmatrix}
@@ -100,7 +109,8 @@ a &\sim \operatorname{N}(X \mu,U)\\
 \epsilon &\sim \operatorname{N}(0,V)
 \end{align}
 \]
-where \(X\) is a block structured design matrix that disseminates the elements of \(\mu\) to the appropriate elements of \(a\) and \(U\) and \(V\) are the block diagonal matrices
+where \(X\) is a block structured design matrix that disseminates the elements of \(\mu\) to the
+appropriate elements of \(a\) and \(U\) and \(V\) are the block diagonal matrices
 \[
 \begin{gather}
 U = \begin{bmatrix}
@@ -235,6 +245,10 @@ U &= I_{m} \otimes \mathsf{U}\\
 V &= I_{n} \otimes \mathsf{V}\\
 \end{align}
 \]
-where \(n\) denotes the total number of observations, \(q\) the dimension of each observation, \(I_{r}\) the \(r \times r\) identity matrix, \(1_{r}\) a column vector of \(r\) ones, \(G\) a matrix of ones denoting the structure of observations within subjects, \(\mathsf{U}\) the covariance matrix of the random effects and \(\mathsf{V}\) the covariance of a single observation about its mean.
+where \(n\) denotes the total number of observations, \(q\) the dimension of each observation,
+\(I_{r}\) the \(r \times r\) identity matrix, \(1_{r}\) a column vector of \(r\) ones, \(G\) a
+matrix of ones denoting the structure of observations within subjects, \(\mathsf{U}\) the covariance
+matrix of the random effects and \(\mathsf{V}\) the covariance of a single observation about its
+mean.
 
 

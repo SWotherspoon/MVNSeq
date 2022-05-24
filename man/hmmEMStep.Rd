@@ -23,4 +23,3 @@ The HMM update step of the EM algorithm.
 Perform a single step of the EM algorithm to fit the HMM component
 of a multivariate Normal HMM model.
 }
-

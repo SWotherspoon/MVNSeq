@@ -11,9 +11,11 @@ initHMM2(y, cl, formula1, formula2, data)
 
 \item{cl}{an integer vector allocating observations to classes}
 
-\item{formula1}{formula for the logistic model relating the transition from state 1 to state 2 to the covariates}
+\item{formula1}{formula for the logistic model relating the
+transition from state 1 to state 2 to the covariates}
 
-\item{formula2}{formula for the logistic model relating the transition from state 2 to state 1 to the covariates}
+\item{formula2}{formula for the logistic model relating the
+transition from state 2 to state 1 to the covariates}
 
 \item{data}{a dataframe of covariates}
 }
@@ -30,4 +32,3 @@ allocations, estimate the parameters for a two state hidden Markov
 model where the transition probabilities are governed by logistic
 regression.
 }
-

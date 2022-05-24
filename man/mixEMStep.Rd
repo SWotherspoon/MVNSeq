@@ -23,4 +23,3 @@ The mixture update step of the EM algorithm.
 Perform a single step of the EM algorithm to fit the mixture
 component of a multivariate Normal mixture model.
 }
-

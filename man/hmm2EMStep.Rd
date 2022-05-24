@@ -13,9 +13,11 @@ hmm2EMStep(K, y, pars, formula1, formula2, data)
 
 \item{pars}{current sequence parameters}
 
-\item{formula1}{formula for the logistic model relating the transition from state 1 to state 2 to the covariates}
+\item{formula1}{formula for the logistic model relating the
+transition from state 1 to state 2 to the covariates}
 
-\item{formula2}{formula for the logistic model relating the transition from state 2 to state 1 to the covariates}
+\item{formula2}{formula for the logistic model relating the
+transition from state 2 to state 1 to the covariates}
 
 \item{data}{a dataframe of covariates}
 }
@@ -30,4 +32,3 @@ Perform a single step of the EM algorithm to fit the HMM component
 of a two state multivariate Normal HMM model where the transistion
 probabilities are governed by logistic regression models.
 }
-

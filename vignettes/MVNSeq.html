@@ -1,0 +1,1122 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="S. Wotherspoon" />
+
+<meta name="date" content="2022-05-24" />
+
+<title>MVNSeq</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">MVNSeq</h1>
+<h4 class="author">S. Wotherspoon</h4>
+<h4 class="date">2022-05-24</h4>
+
+
+
+<p>Some simple tests of the <code>MVNSeq</code> package.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">31</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MVNSeq)</span></code></pre></div>
+<div id="iris" class="section level1">
+<h1>Iris</h1>
+<p>Fit a simple mixture model to the <code>iris</code> data set and
+compare to the results from <code>mclust</code>.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>y <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(<span class="fu">log</span>(iris[,<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>]))</span></code></pre></div>
+<p>Use kmeans to get initial class memberships, then fit a mixture
+model</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MVNSeq)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>km <span class="ot">&lt;-</span> <span class="fu">kmeans</span>(y,<span class="dv">3</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">mvnMix</span>(y,km<span class="sc">$</span>cluster)</span></code></pre></div>
+<p>Fit equivalent mclust model</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mclust)</span></code></pre></div>
+<pre><code>## Package &#39;mclust&#39; version 5.4.9
+## Type &#39;citation(&quot;mclust&quot;)&#39; for citing this R package in publications.</code></pre>
+<pre><code>## 
+## Attaching package: &#39;mclust&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:MVNSeq&#39;:
+## 
+##     dmvnorm</code></pre>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>fit.mclust <span class="ot">&lt;-</span> <span class="fu">Mclust</span>(y,<span class="at">G=</span><span class="dv">3</span>,<span class="at">modelNames=</span><span class="fu">c</span>(<span class="st">&quot;VVV&quot;</span>))</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit.mclust,<span class="at">parameters=</span>T)</span></code></pre></div>
+<pre><code>## ---------------------------------------------------- 
+## Gaussian finite mixture model fitted by EM algorithm 
+## ---------------------------------------------------- 
+## 
+## Mclust VVV (ellipsoidal, varying volume, shape, and orientation) model with 3
+## components: 
+## 
+##  log-likelihood   n df      BIC      ICL
+##         399.351 150 44 578.2341 570.2944
+## 
+## Clustering table:
+##  1  2  3 
+## 50 50 50 
+## 
+## Mixing probabilities:
+##         1         2         3 
+## 0.3333333 0.3335230 0.3331437 
+## 
+## Means:
+##                    [,1]      [,2]      [,3]
+## Sepal.Length  1.6082054 1.7886149 1.8694043
+## Sepal.Width   1.2258557 1.0291605 1.0673230
+## Petal.Length  0.3727587 1.4581499 1.6943406
+## Petal.Width  -1.4846488 0.2810133 0.6868985
+## 
+## Variances:
+## [,,1]
+##              Sepal.Length Sepal.Width Petal.Length Petal.Width
+## Sepal.Length  0.004870480 0.005682252  0.002464797 0.008278210
+## Sepal.Width   0.005682252 0.012443211  0.002419565 0.009375229
+## Petal.Length  0.002464797 0.002419565  0.014310059 0.014944431
+## Petal.Width   0.008278210 0.009375229  0.014944431 0.163683440
+## [,,2]
+##              Sepal.Length Sepal.Width Petal.Length Petal.Width
+## Sepal.Length  0.010303410 0.008540449   0.01220843  0.01193923
+## Sepal.Width   0.008540449 0.015026171   0.01246239  0.01685327
+## Petal.Length  0.012208427 0.012462393   0.02024392  0.02014486
+## Petal.Width   0.011939232 0.016853265   0.02014486  0.02873472
+## [,,3]
+##              Sepal.Length Sepal.Width Petal.Length Petal.Width
+## Sepal.Length  0.008469729 0.003666960  0.007548231 0.005007579
+## Sepal.Width   0.003666960 0.011738316  0.004241368 0.010410232
+## Petal.Length  0.007548231 0.004241368  0.009844574 0.006629606
+## Petal.Width   0.005007579 0.010410232  0.006629606 0.021445319</code></pre>
+<p>Compare classification</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(<span class="fu">max.col</span>(fit<span class="sc">$</span>pars<span class="sc">$</span>P),fit.mclust<span class="sc">$</span>classification)</span></code></pre></div>
+<pre><code>##    
+##      1  2  3
+##   1 10  0  0
+##   2  0 50 50
+##   3 40  0  0</code></pre>
+<p>Match labels and compare means and variances</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>j <span class="ot">&lt;-</span> <span class="fu">order</span>(<span class="fu">max.col</span>(<span class="fu">table</span>(<span class="fu">max.col</span>(fit<span class="sc">$</span>pars<span class="sc">$</span>P),fit.mclust<span class="sc">$</span>classification)))</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sapply</span>(fit<span class="sc">$</span>pars<span class="sc">$</span>mvn[j],<span class="cf">function</span>(p) p<span class="sc">$</span>mu)</span></code></pre></div>
+<pre><code>##                    [,1]       [,2]      [,3]
+## Sepal.Length  1.6302081  1.6031143 1.8289866
+## Sepal.Width   1.2457518  1.2212521 1.0482309
+## Petal.Length  0.4330135  0.3588166 1.5761780
+## Petal.Width  -0.9168073 -1.6160388 0.4838404</code></pre>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lapply</span>(fit<span class="sc">$</span>pars<span class="sc">$</span>mvn[j],<span class="cf">function</span>(p) p<span class="sc">$</span>Sigma)</span></code></pre></div>
+<pre><code>## [[1]]
+##              Sepal.Length Sepal.Width Petal.Length Petal.Width
+## Sepal.Length  0.003861966 0.009891094  0.001953418  0.00417773
+## Sepal.Width   0.009891094 0.029108661  0.008444047  0.01408589
+## Petal.Length  0.001953418 0.008444047  0.013309434  0.01208424
+## Petal.Width   0.004177730 0.014085890  0.012084237  0.04055815
+## 
+## [[2]]
+##              Sepal.Length  Sepal.Width Petal.Length Petal.Width
+## Sepal.Length  0.004965897 0.0045836589 0.0022053777 0.005667134
+## Sepal.Width   0.004583659 0.0084742902 0.0006840144 0.005066235
+## Petal.Length  0.002205378 0.0006840144 0.0135071318 0.005857515
+## Petal.Width   0.005667134 0.0050662352 0.0058575152 0.100300772
+## 
+## [[3]]
+##              Sepal.Length Sepal.Width Petal.Length Petal.Width
+## Sepal.Length  0.011018821 0.006875874   0.01465008  0.01667318
+## Sepal.Width   0.006875874 0.013747274   0.01060763  0.01750599
+## Petal.Length  0.014650077 0.010607630   0.02899371  0.03735764
+## Petal.Width   0.016673177 0.017505987   0.03735764  0.06627777</code></pre>
+</div>
+<div id="simulation" class="section level1">
+<h1>Simulation</h1>
+<p>Simulate m sequences of q dimensional responses from a K state hidden
+Markov or mixture model</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Number of components K, responses q and groups m</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mvtnorm)</span></code></pre></div>
+<pre><code>## 
+## Attaching package: &#39;mvtnorm&#39;</code></pre>
+<pre><code>## The following object is masked from &#39;package:mclust&#39;:
+## 
+##     dmvnorm</code></pre>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>sim <span class="ot">&lt;-</span> <span class="cf">function</span>(K,q,m,<span class="at">uscale=</span><span class="dv">0</span>,<span class="at">vscale=</span><span class="dv">1</span>,<span class="at">minl=</span><span class="dv">100</span>,<span class="at">meanl=</span><span class="dv">500</span>,<span class="at">hmm=</span>T) {</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="do">## Vector of sequence lengths</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  ns <span class="ot">&lt;-</span> minl<span class="sc">+</span><span class="fu">rpois</span>(m,<span class="fu">max</span>(meanl<span class="sc">-</span>minl,<span class="dv">0</span>))</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  n <span class="ot">&lt;-</span> <span class="fu">sum</span>(ns)</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>  <span class="do">## Group structure</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>  gr <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span>m,ns)</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>  J <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="fu">cumsum</span>(ns))</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>  <span class="do">## Responses, group means, population means, and covariances</span></span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>  Y <span class="ot">&lt;-</span> <span class="fu">array</span>(<span class="dv">0</span>,<span class="fu">c</span>(n,q,K))</span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>  A <span class="ot">&lt;-</span> <span class="fu">array</span>(<span class="dv">0</span>,<span class="fu">c</span>(m,q,K))</span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>  Mu <span class="ot">&lt;-</span> <span class="fu">array</span>(<span class="dv">0</span>,<span class="fu">c</span>(K,q))</span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>  U <span class="ot">&lt;-</span> <span class="fu">vector</span>(<span class="at">mode=</span><span class="st">&quot;list&quot;</span>,K)</span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>  V <span class="ot">&lt;-</span> <span class="fu">vector</span>(<span class="at">mode=</span><span class="st">&quot;list&quot;</span>,K)</span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a>  <span class="do">## Simulate a response for each state and group</span></span>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(k <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>K) {</span>
+<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a>    <span class="do">## Covariance of random effects</span></span>
+<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a>    U[[k]] <span class="ot">&lt;-</span> <span class="fu">crossprod</span>(<span class="fu">matrix</span>(<span class="fu">rnorm</span>(q<span class="sc">*</span>q,<span class="dv">0</span>,uscale),q,q))</span>
+<span id="cb19-22"><a href="#cb19-22" aria-hidden="true" tabindex="-1"></a>    <span class="do">## Covariance of response about group means</span></span>
+<span id="cb19-23"><a href="#cb19-23" aria-hidden="true" tabindex="-1"></a>    V[[k]] <span class="ot">&lt;-</span> <span class="fu">crossprod</span>(<span class="fu">matrix</span>(<span class="fu">rnorm</span>(q<span class="sc">*</span>q,<span class="dv">0</span>,vscale),q,q))</span>
+<span id="cb19-24"><a href="#cb19-24" aria-hidden="true" tabindex="-1"></a>    <span class="do">## Population mean</span></span>
+<span id="cb19-25"><a href="#cb19-25" aria-hidden="true" tabindex="-1"></a>    Mu[k,] <span class="ot">&lt;-</span> <span class="fu">runif</span>(q,<span class="dv">0</span>,<span class="dv">10</span>)</span>
+<span id="cb19-26"><a href="#cb19-26" aria-hidden="true" tabindex="-1"></a>    <span class="do">## Group means</span></span>
+<span id="cb19-27"><a href="#cb19-27" aria-hidden="true" tabindex="-1"></a>    A[,,k] <span class="ot">&lt;-</span> <span class="fu">rmvnorm</span>(m,Mu[k,],U[[k]])</span>
+<span id="cb19-28"><a href="#cb19-28" aria-hidden="true" tabindex="-1"></a>    <span class="do">## Responses</span></span>
+<span id="cb19-29"><a href="#cb19-29" aria-hidden="true" tabindex="-1"></a>    Y[,,k] <span class="ot">&lt;-</span> A[gr,,k] <span class="sc">+</span> <span class="fu">rmvnorm</span>(n,<span class="fu">rep</span>(<span class="dv">0</span>,q),V[[k]])</span>
+<span id="cb19-30"><a href="#cb19-30" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb19-31"><a href="#cb19-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-32"><a href="#cb19-32" aria-hidden="true" tabindex="-1"></a>  <span class="do">## state prior</span></span>
+<span id="cb19-33"><a href="#cb19-33" aria-hidden="true" tabindex="-1"></a>  p <span class="ot">&lt;-</span> <span class="fu">runif</span>(K)</span>
+<span id="cb19-34"><a href="#cb19-34" aria-hidden="true" tabindex="-1"></a>  p <span class="ot">&lt;-</span> p<span class="sc">/</span><span class="fu">sum</span>(p)</span>
+<span id="cb19-35"><a href="#cb19-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-36"><a href="#cb19-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-37"><a href="#cb19-37" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(hmm) {</span>
+<span id="cb19-38"><a href="#cb19-38" aria-hidden="true" tabindex="-1"></a>    <span class="do">## Random transition matrix</span></span>
+<span id="cb19-39"><a href="#cb19-39" aria-hidden="true" tabindex="-1"></a>    Q <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">runif</span>(K<span class="sc">*</span>K),K,K)</span>
+<span id="cb19-40"><a href="#cb19-40" aria-hidden="true" tabindex="-1"></a>    Q <span class="ot">&lt;-</span> Q<span class="sc">/</span><span class="fu">rowSums</span>(Q)</span>
+<span id="cb19-41"><a href="#cb19-41" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb19-42"><a href="#cb19-42" aria-hidden="true" tabindex="-1"></a>    Q <span class="ot">&lt;-</span> <span class="fu">matrix</span>(p,K,K,<span class="at">byrow=</span>T)</span>
+<span id="cb19-43"><a href="#cb19-43" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb19-44"><a href="#cb19-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-45"><a href="#cb19-45" aria-hidden="true" tabindex="-1"></a>  <span class="do">## Simulate (Markovian) sequence of class membership and observations</span></span>
+<span id="cb19-46"><a href="#cb19-46" aria-hidden="true" tabindex="-1"></a>  cl <span class="ot">&lt;-</span> <span class="fu">integer</span>(n)</span>
+<span id="cb19-47"><a href="#cb19-47" aria-hidden="true" tabindex="-1"></a>  y <span class="ot">&lt;-</span> <span class="fu">array</span>(<span class="dv">0</span>,<span class="fu">c</span>(n,q))</span>
+<span id="cb19-48"><a href="#cb19-48" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>m) {</span>
+<span id="cb19-49"><a href="#cb19-49" aria-hidden="true" tabindex="-1"></a>    j <span class="ot">&lt;-</span> J[i]</span>
+<span id="cb19-50"><a href="#cb19-50" aria-hidden="true" tabindex="-1"></a>    cl[j] <span class="ot">&lt;-</span> <span class="fu">sample</span>(K,<span class="dv">1</span>,<span class="at">prob=</span>p)</span>
+<span id="cb19-51"><a href="#cb19-51" aria-hidden="true" tabindex="-1"></a>    y[j,] <span class="ot">&lt;-</span> Y[j,,cl[j]]</span>
+<span id="cb19-52"><a href="#cb19-52" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span>(j <span class="cf">in</span> (J[i]<span class="sc">+</span><span class="dv">1</span>)<span class="sc">:</span>J[i<span class="sc">+</span><span class="dv">1</span>]) {</span>
+<span id="cb19-53"><a href="#cb19-53" aria-hidden="true" tabindex="-1"></a>      cl[j] <span class="ot">&lt;-</span> <span class="fu">sample</span>(K,<span class="dv">1</span>,<span class="at">prob=</span>Q[cl[j<span class="dv">-1</span>],])</span>
+<span id="cb19-54"><a href="#cb19-54" aria-hidden="true" tabindex="-1"></a>      y[j,] <span class="ot">&lt;-</span> Y[j,,cl[j]]</span>
+<span id="cb19-55"><a href="#cb19-55" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb19-56"><a href="#cb19-56" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb19-57"><a href="#cb19-57" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(<span class="at">y=</span>y,<span class="at">cl=</span>cl,<span class="at">gr=</span>gr,<span class="at">A=</span>A,<span class="at">Mu=</span>Mu,<span class="at">U=</span>U,<span class="at">V=</span>V,<span class="at">p=</span>p,<span class="at">Q=</span>Q)</span>
+<span id="cb19-58"><a href="#cb19-58" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<div id="single-sequence-from-a-3-component-mixture" class="section level2">
+<h2>Single sequence from a 3 component Mixture</h2>
+<p>Simulate a 3 component mixture.</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>s <span class="ot">&lt;-</span> <span class="fu">sim</span>(<span class="at">K=</span><span class="dv">3</span>,<span class="at">q=</span><span class="dv">3</span>,<span class="at">m=</span><span class="dv">1</span>,<span class="at">hmm=</span>F)</span></code></pre></div>
+<p>Use kmeans to get initial class memberships, then fit a mixture
+model</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>km <span class="ot">&lt;-</span> <span class="fu">kmeans</span>(s<span class="sc">$</span>y,<span class="dv">3</span>)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">mvnMix</span>(s<span class="sc">$</span>y,km<span class="sc">$</span>cluster)</span></code></pre></div>
+<p>Fit equivalent mclust model</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mclust)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>fit.mclust <span class="ot">&lt;-</span> <span class="fu">Mclust</span>(s<span class="sc">$</span>y,<span class="at">G=</span><span class="dv">3</span>,<span class="at">modelNames=</span><span class="fu">c</span>(<span class="st">&quot;VVV&quot;</span>))</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(fit.mclust,<span class="at">parameters=</span>T)</span></code></pre></div>
+<pre><code>## ---------------------------------------------------- 
+## Gaussian finite mixture model fitted by EM algorithm 
+## ---------------------------------------------------- 
+## 
+## Mclust VVV (ellipsoidal, varying volume, shape, and orientation) model with 3
+## components: 
+## 
+##  log-likelihood   n df       BIC      ICL
+##       -2913.247 481 29 -6005.595 -6099.98
+## 
+## Clustering table:
+##   1   2   3 
+## 221 139 121 
+## 
+## Mixing probabilities:
+##         1         2         3 
+## 0.4505086 0.2884524 0.2610390 
+## 
+## Means:
+##          [,1]      [,2]     [,3]
+## [1,] 2.945562 4.1017695 1.633788
+## [2,] 9.083509 0.9191229 6.345848
+## [3,] 4.209182 9.8565837 2.097516
+## 
+## Variances:
+## [,,1]
+##            [,1]      [,2]       [,3]
+## [1,]  2.8497032  1.545379 -0.3831208
+## [2,]  1.5453791  7.967206 -2.6905005
+## [3,] -0.3831208 -2.690500  3.0056490
+## [,,2]
+##            [,1]      [,2]       [,3]
+## [1,]  0.6110964 -1.550704  0.4599090
+## [2,] -1.5507045  4.771453 -1.2217400
+## [3,]  0.4599090 -1.221740  0.8663531
+## [,,3]
+##            [,1]      [,2]       [,3]
+## [1,] 1.72524914 0.5093997 0.09850337
+## [2,] 0.50939972 2.2240983 0.20858488
+## [3,] 0.09850337 0.2085849 2.30840630</code></pre>
+<p>Compare to mclust classification</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(<span class="fu">max.col</span>(fit<span class="sc">$</span>pars<span class="sc">$</span>P),fit.mclust<span class="sc">$</span>classification)</span></code></pre></div>
+<pre><code>##    
+##       1   2   3
+##   1   0 139   0
+##   2 204   0   0
+##   3  17   0 121</code></pre>
+<p>Match labels and compare means and variances</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>j <span class="ot">&lt;-</span> <span class="fu">order</span>(<span class="fu">max.col</span>(<span class="fu">table</span>(<span class="fu">max.col</span>(fit<span class="sc">$</span>pars<span class="sc">$</span>P),fit.mclust<span class="sc">$</span>classification)))</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sapply</span>(fit<span class="sc">$</span>pars<span class="sc">$</span>mvn[j],<span class="cf">function</span>(p) p<span class="sc">$</span>mu)</span></code></pre></div>
+<pre><code>##          [,1]      [,2]     [,3]
+## [1,] 2.988210 4.1017362 1.755131
+## [2,] 9.232132 0.9191037 6.518266
+## [3,] 4.241944 9.8560758 2.341899</code></pre>
+<div class="sourceCode" id="cb28"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lapply</span>(fit<span class="sc">$</span>pars<span class="sc">$</span>mvn[j],<span class="cf">function</span>(p) p<span class="sc">$</span>Sigma)</span></code></pre></div>
+<pre><code>## [[1]]
+##            [,1]      [,2]       [,3]
+## [1,]  2.9213586  1.565829 -0.4347314
+## [2,]  1.5658290  8.263213 -2.9500608
+## [3,] -0.4347314 -2.950061  3.0921178
+## 
+## [[2]]
+##            [,1]      [,2]       [,3]
+## [1,]  0.6110664 -1.550602  0.4605798
+## [2,] -1.5506019  4.770914 -1.2232579
+## [3,]  0.4605798 -1.223258  0.8682789
+## 
+## [[3]]
+##           [,1]      [,2]      [,3]
+## [1,] 1.8481144 0.6614116 0.2699746
+## [2,] 0.6614116 2.4693060 0.3569627
+## [3,] 0.2699746 0.3569627 2.6526515</code></pre>
+<p>Compare to actual classification</p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(<span class="fu">max.col</span>(fit<span class="sc">$</span>pars<span class="sc">$</span>P),s<span class="sc">$</span>cl)</span></code></pre></div>
+<pre><code>##    
+##       1   2   3
+##   1 139   0   0
+##   2   2  29 173
+##   3   0 119  19</code></pre>
+<p>Match labels and compare means</p>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>j <span class="ot">&lt;-</span> <span class="fu">order</span>(<span class="fu">max.col</span>(<span class="fu">table</span>(<span class="fu">max.col</span>(fit<span class="sc">$</span>pars<span class="sc">$</span>P),s<span class="sc">$</span>cl)))</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="fu">t</span>(s<span class="sc">$</span>Mu)</span></code></pre></div>
+<pre><code>##           [,1]     [,2]     [,3]
+## [1,] 4.0854750 1.485338 3.121242
+## [2,] 0.9856953 6.575996 9.382425
+## [3,] 9.7675081 2.162322 4.325996</code></pre>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sapply</span>(fit<span class="sc">$</span>pars<span class="sc">$</span>mvn[j],<span class="cf">function</span>(p) p<span class="sc">$</span>mu)</span></code></pre></div>
+<pre><code>##           [,1]     [,2]     [,3]
+## [1,] 4.1017362 1.755131 2.988210
+## [2,] 0.9191037 6.518266 9.232132
+## [3,] 9.8560758 2.341899 4.241944</code></pre>
+<p>and variances</p>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>s<span class="sc">$</span>V</span></code></pre></div>
+<pre><code>## [[1]]
+##            [,1]      [,2]       [,3]
+## [1,]  0.6360487 -1.580102  0.4832672
+## [2,] -1.5801019  4.776093 -1.2770457
+## [3,]  0.4832672 -1.277046  0.8745483
+## 
+## [[2]]
+##           [,1]      [,2]      [,3]
+## [1,] 2.4032193 0.6227514 0.7268793
+## [2,] 0.6227514 2.9402115 0.6379850
+## [3,] 0.7268793 0.6379850 2.9142096
+## 
+## [[3]]
+##            [,1]      [,2]       [,3]
+## [1,]  3.5668989  2.744795 -0.9034164
+## [2,]  2.7447949  8.732531 -3.1359605
+## [3,] -0.9034164 -3.135961  2.9652120</code></pre>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lapply</span>(fit<span class="sc">$</span>pars<span class="sc">$</span>mvn[j],<span class="cf">function</span>(p) p<span class="sc">$</span>Sigma)</span></code></pre></div>
+<pre><code>## [[1]]
+##            [,1]      [,2]       [,3]
+## [1,]  0.6110664 -1.550602  0.4605798
+## [2,] -1.5506019  4.770914 -1.2232579
+## [3,]  0.4605798 -1.223258  0.8682789
+## 
+## [[2]]
+##           [,1]      [,2]      [,3]
+## [1,] 1.8481144 0.6614116 0.2699746
+## [2,] 0.6614116 2.4693060 0.3569627
+## [3,] 0.2699746 0.3569627 2.6526515
+## 
+## [[3]]
+##            [,1]      [,2]       [,3]
+## [1,]  2.9213586  1.565829 -0.4347314
+## [2,]  1.5658290  8.263213 -2.9500608
+## [3,] -0.4347314 -2.950061  3.0921178</code></pre>
+</div>
+<div id="single-hhm-sequence" class="section level2">
+<h2>Single HHM sequence</h2>
+<p>Simulate one long sequence</p>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>s <span class="ot">&lt;-</span> <span class="fu">sim</span>(<span class="at">K=</span><span class="dv">3</span>,<span class="at">q=</span><span class="dv">3</span>,<span class="at">m=</span><span class="dv">1</span>,<span class="at">minl=</span><span class="dv">10000</span>,<span class="at">hmm=</span>T)</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="fu">pairs</span>(s<span class="sc">$</span>y,<span class="at">pch=</span><span class="st">&quot;.&quot;</span>,<span class="at">col=</span>s<span class="sc">$</span>cl)</span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<div id="mixture-model" class="section level3">
+<h3>Mixture model</h3>
+<p>Use kmeans to get initial class memberships, then fit a mixture
+model</p>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>km <span class="ot">&lt;-</span> <span class="fu">kmeans</span>(s<span class="sc">$</span>y,<span class="dv">3</span>)</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">mvnMix</span>(s<span class="sc">$</span>y,km<span class="sc">$</span>cluster)</span></code></pre></div>
+<p>Compare to actual classification</p>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(<span class="fu">max.col</span>(fit<span class="sc">$</span>pars<span class="sc">$</span>P),s<span class="sc">$</span>cl)</span></code></pre></div>
+<pre><code>##    
+##        1    2    3
+##   1   24 5505    2
+##   2    1    1 1515
+##   3 2900   51    1</code></pre>
+<p>Match labels and compare means</p>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>j <span class="ot">&lt;-</span> <span class="fu">order</span>(<span class="fu">max.col</span>(<span class="fu">table</span>(<span class="fu">max.col</span>(fit<span class="sc">$</span>pars<span class="sc">$</span>P),s<span class="sc">$</span>cl)))</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="fu">t</span>(s<span class="sc">$</span>Mu)</span></code></pre></div>
+<pre><code>##          [,1]       [,2]     [,3]
+## [1,] 1.086333 0.09451626 6.557651
+## [2,] 5.267106 9.13951924 6.266136
+## [3,] 2.558561 4.19027239 1.611691</code></pre>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sapply</span>(fit<span class="sc">$</span>pars<span class="sc">$</span>mvn[j],<span class="cf">function</span>(p) p<span class="sc">$</span>mu)</span></code></pre></div>
+<pre><code>##          [,1]       [,2]     [,3]
+## [1,] 1.042559 0.01280498 6.585248
+## [2,] 5.286715 9.13202711 6.267375
+## [3,] 2.518324 4.16761305 1.592715</code></pre>
+<p>and variances</p>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a>s<span class="sc">$</span>V</span></code></pre></div>
+<pre><code>## [[1]]
+##           [,1]      [,2]      [,3]
+## [1,]  3.084536 -2.006272  2.343617
+## [2,] -2.006272  2.080410 -1.599316
+## [3,]  2.343617 -1.599316  2.072405
+## 
+## [[2]]
+##            [,1]      [,2]       [,3]
+## [1,]  8.0712377  2.687176 -0.9199051
+## [2,]  2.6871758 10.513295 -4.1756820
+## [3,] -0.9199051 -4.175682  2.9279203
+## 
+## [[3]]
+##            [,1]       [,2]       [,3]
+## [1,]  1.8942602 -0.3337778 -0.1452044
+## [2,] -0.3337778  0.5829047 -1.1508488
+## [3,] -0.1452044 -1.1508488  2.6578544</code></pre>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lapply</span>(fit<span class="sc">$</span>pars<span class="sc">$</span>mvn[j],<span class="cf">function</span>(p) p<span class="sc">$</span>Sigma)</span></code></pre></div>
+<pre><code>## [[1]]
+##           [,1]      [,2]      [,3]
+## [1,]  3.010025 -1.972045  2.304823
+## [2,] -1.972045  2.041684 -1.574385
+## [3,]  2.304823 -1.574385  2.048570
+## 
+## [[2]]
+##            [,1]      [,2]       [,3]
+## [1,]  8.2298235  2.836245 -0.9944135
+## [2,]  2.8362452 10.580016 -4.1526961
+## [3,] -0.9944135 -4.152696  2.9474754
+## 
+## [[3]]
+##            [,1]       [,2]       [,3]
+## [1,]  1.8575275 -0.3105523 -0.1776459
+## [2,] -0.3105523  0.5804482 -1.1547459
+## [3,] -0.1776459 -1.1547459  2.6772098</code></pre>
+</div>
+<div id="hmm" class="section level3">
+<h3>HMM</h3>
+<p>Use kmeans to get initial class memberships, then fit an hidden
+Markov model</p>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a>km <span class="ot">&lt;-</span> <span class="fu">kmeans</span>(s<span class="sc">$</span>y,<span class="dv">3</span>)</span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">mvnHMM</span>(s<span class="sc">$</span>y,km<span class="sc">$</span>cluster)</span></code></pre></div>
+<p>Compare to actual classification</p>
+<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(<span class="fu">max.col</span>(fit<span class="sc">$</span>pars<span class="sc">$</span>P),s<span class="sc">$</span>cl)</span></code></pre></div>
+<pre><code>##    
+##        1    2    3
+##   1 2902   53    1
+##   2   21 5504    3
+##   3    2    0 1514</code></pre>
+<p>Match labels and compare means</p>
+<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a>j <span class="ot">&lt;-</span> <span class="fu">order</span>(<span class="fu">max.col</span>(<span class="fu">table</span>(<span class="fu">max.col</span>(fit<span class="sc">$</span>pars<span class="sc">$</span>P),s<span class="sc">$</span>cl)))</span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a><span class="fu">t</span>(s<span class="sc">$</span>Mu)</span></code></pre></div>
+<pre><code>##          [,1]       [,2]     [,3]
+## [1,] 1.086333 0.09451626 6.557651
+## [2,] 5.267106 9.13951924 6.266136
+## [3,] 2.558561 4.19027239 1.611691</code></pre>
+<div class="sourceCode" id="cb57"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sapply</span>(fit<span class="sc">$</span>pars<span class="sc">$</span>mvn[j],<span class="cf">function</span>(p) p<span class="sc">$</span>mu)</span></code></pre></div>
+<pre><code>##          [,1]       [,2]     [,3]
+## [1,] 1.043743 0.01180117 6.584700
+## [2,] 5.286607 9.13354819 6.267555
+## [3,] 2.519434 4.16774027 1.592599</code></pre>
+<p>and variances</p>
+<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a>s<span class="sc">$</span>V</span></code></pre></div>
+<pre><code>## [[1]]
+##           [,1]      [,2]      [,3]
+## [1,]  3.084536 -2.006272  2.343617
+## [2,] -2.006272  2.080410 -1.599316
+## [3,]  2.343617 -1.599316  2.072405
+## 
+## [[2]]
+##            [,1]      [,2]       [,3]
+## [1,]  8.0712377  2.687176 -0.9199051
+## [2,]  2.6871758 10.513295 -4.1756820
+## [3,] -0.9199051 -4.175682  2.9279203
+## 
+## [[3]]
+##            [,1]       [,2]       [,3]
+## [1,]  1.8942602 -0.3337778 -0.1452044
+## [2,] -0.3337778  0.5829047 -1.1508488
+## [3,] -0.1452044 -1.1508488  2.6578544</code></pre>
+<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb61-1"><a href="#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="fu">lapply</span>(fit<span class="sc">$</span>pars<span class="sc">$</span>mvn[j],<span class="cf">function</span>(p) p<span class="sc">$</span>Sigma)</span></code></pre></div>
+<pre><code>## [[1]]
+##           [,1]      [,2]      [,3]
+## [1,]  3.009821 -1.969798  2.303824
+## [2,] -1.969798  2.039575 -1.573023
+## [3,]  2.303824 -1.573023  2.048411
+## 
+## [[2]]
+##            [,1]      [,2]       [,3]
+## [1,]  8.2306372  2.840667 -0.9937869
+## [2,]  2.8406666 10.578730 -4.1550536
+## [3,] -0.9937869 -4.155054  2.9489410
+## 
+## [[3]]
+##            [,1]       [,2]       [,3]
+## [1,]  1.8602502 -0.3109706 -0.1780499
+## [2,] -0.3109706  0.5801423 -1.1538884
+## [3,] -0.1780499 -1.1538884  2.6755620</code></pre>
+<p>and transition probabilities</p>
+<div class="sourceCode" id="cb63"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>fit<span class="sc">$</span>Q[j,j]</span></code></pre></div>
+<pre><code>## NULL</code></pre>
+<div class="sourceCode" id="cb65"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a>s<span class="sc">$</span>Q</span></code></pre></div>
+<pre><code>##           [,1]      [,2]       [,3]
+## [1,] 0.5013823 0.4388176 0.05980009
+## [2,] 0.1724856 0.6340568 0.19345761
+## [3,] 0.3003886 0.5415018 0.15810962</code></pre>
+</div>
+</div>
+<div id="multiple-hhm-sequence" class="section level2">
+<h2>Multiple HHM Sequence</h2>
+<p>Simulate many shorter sequences all with varying means</p>
+<div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a>s <span class="ot">&lt;-</span> <span class="fu">sim</span>(<span class="at">K=</span><span class="dv">3</span>,<span class="at">q=</span><span class="dv">3</span>,<span class="at">m=</span><span class="dv">100</span>,<span class="at">minl=</span><span class="dv">100</span>,<span class="at">meanl=</span><span class="dv">500</span>,<span class="at">hmm=</span>T,<span class="at">uscale =</span> <span class="fl">0.8</span>)</span>
+<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a><span class="fu">pairs</span>(s<span class="sc">$</span>y,<span class="at">pch=</span><span class="st">&quot;.&quot;</span>,<span class="at">col=</span>s<span class="sc">$</span>cl)</span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<div id="fixed-effects-mixture-model" class="section level3">
+<h3>Fixed Effects Mixture Model</h3>
+<p>Use kmeans to get initial class memberships, but use actual means to
+avoid label permutation issues, then fit a mixture model to each
+sequence forcing common mixing fractions across sequences</p>
+<div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a>km <span class="ot">&lt;-</span> <span class="fu">kmeans</span>(s<span class="sc">$</span>y,s<span class="sc">$</span>Mu)</span>
+<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">gmvnMix</span>(s<span class="sc">$</span>y,km<span class="sc">$</span>cluster,s<span class="sc">$</span>gr,<span class="at">common.fractions =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<p>Compare classifications across all groups</p>
+<div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(<span class="fu">unlist</span>(<span class="fu">lapply</span>(fit<span class="sc">$</span>pars,<span class="cf">function</span>(p) <span class="fu">max.col</span>(p<span class="sc">$</span>P))),s<span class="sc">$</span>cl)</span></code></pre></div>
+<pre><code>##    
+##         1     2     3
+##   1 13163    41   321
+##   2   176 22877     3
+##   3   827    23 12287</code></pre>
+<p>Compare group means</p>
+<div class="sourceCode" id="cb71"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Check parameter estimates match simulation</span></span>
+<span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a>opar <span class="ot">&lt;-</span> <span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>),<span class="at">mar=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>)<span class="sc">+</span><span class="fl">0.1</span>)</span>
+<span id="cb71-3"><a href="#cb71-3" aria-hidden="true" tabindex="-1"></a><span class="fu">matplot</span>(s<span class="sc">$</span>A[,,<span class="dv">1</span>],<span class="fu">t</span>(<span class="fu">sapply</span>(fit<span class="sc">$</span>pars,<span class="cf">function</span>(p) p<span class="sc">$</span>mvn[[<span class="dv">1</span>]]<span class="sc">$</span>mu)),<span class="at">pch=</span><span class="dv">16</span>,<span class="at">cex=</span><span class="fl">0.5</span>,<span class="at">xlab=</span><span class="st">&quot;&quot;</span>,<span class="at">ylab=</span><span class="st">&quot;&quot;</span>)</span>
+<span id="cb71-4"><a href="#cb71-4" aria-hidden="true" tabindex="-1"></a><span class="fu">matplot</span>(s<span class="sc">$</span>A[,,<span class="dv">2</span>],<span class="fu">t</span>(<span class="fu">sapply</span>(fit<span class="sc">$</span>pars,<span class="cf">function</span>(p) p<span class="sc">$</span>mvn[[<span class="dv">2</span>]]<span class="sc">$</span>mu)),<span class="at">pch=</span><span class="dv">16</span>,<span class="at">cex=</span><span class="fl">0.5</span>,<span class="at">xlab=</span><span class="st">&quot;&quot;</span>,<span class="at">ylab=</span><span class="st">&quot;&quot;</span>)</span>
+<span id="cb71-5"><a href="#cb71-5" aria-hidden="true" tabindex="-1"></a><span class="fu">matplot</span>(s<span class="sc">$</span>A[,,<span class="dv">3</span>],<span class="fu">t</span>(<span class="fu">sapply</span>(fit<span class="sc">$</span>pars,<span class="cf">function</span>(p) p<span class="sc">$</span>mvn[[<span class="dv">3</span>]]<span class="sc">$</span>mu)),<span class="at">pch=</span><span class="dv">16</span>,<span class="at">cex=</span><span class="fl">0.5</span>,<span class="at">xlab=</span><span class="st">&quot;&quot;</span>,<span class="at">ylab=</span><span class="st">&quot;&quot;</span>)</span>
+<span id="cb71-6"><a href="#cb71-6" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(opar)</span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<p>Compare covariances</p>
+<div class="sourceCode" id="cb72"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a>fit<span class="sc">$</span>pars[[<span class="dv">1</span>]]<span class="sc">$</span>mvn[[<span class="dv">1</span>]]<span class="sc">$</span>Sigma</span></code></pre></div>
+<pre><code>##            [,1]       [,2]       [,3]
+## [1,]  0.9600496 -0.6965665  0.8068133
+## [2,] -0.6965665  5.5786767 -5.6301046
+## [3,]  0.8068133 -5.6301046  5.7568689</code></pre>
+<div class="sourceCode" id="cb74"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a>s<span class="sc">$</span>V[[<span class="dv">1</span>]]</span></code></pre></div>
+<pre><code>##            [,1]       [,2]       [,3]
+## [1,]  0.9393509 -0.6951404  0.8039255
+## [2,] -0.6951404  5.6224343 -5.6769751
+## [3,]  0.8039255 -5.6769751  5.8044153</code></pre>
+<div class="sourceCode" id="cb76"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb76-1"><a href="#cb76-1" aria-hidden="true" tabindex="-1"></a>fit<span class="sc">$</span>pars[[<span class="dv">1</span>]]<span class="sc">$</span>mvn[[<span class="dv">2</span>]]<span class="sc">$</span>Sigma</span></code></pre></div>
+<pre><code>##           [,1]      [,2]     [,3]
+## [1,] 5.1670498 0.2315446 3.410331
+## [2,] 0.2315446 1.4533423 2.367112
+## [3,] 3.4103310 2.3671116 5.660019</code></pre>
+<div class="sourceCode" id="cb78"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a>s<span class="sc">$</span>V[[<span class="dv">2</span>]]</span></code></pre></div>
+<pre><code>##           [,1]      [,2]     [,3]
+## [1,] 5.2063151 0.2528132 3.465387
+## [2,] 0.2528132 1.4422909 2.362094
+## [3,] 3.4653875 2.3620943 5.683514</code></pre>
+<div class="sourceCode" id="cb80"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a>fit<span class="sc">$</span>pars[[<span class="dv">1</span>]]<span class="sc">$</span>mvn[[<span class="dv">3</span>]]<span class="sc">$</span>Sigma</span></code></pre></div>
+<pre><code>##           [,1]        [,2]        [,3]
+## [1,] 3.8140705  0.71893069  0.25106824
+## [2,] 0.7189307  2.04915079 -0.03520764
+## [3,] 0.2510682 -0.03520764  1.65828737</code></pre>
+<div class="sourceCode" id="cb82"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a>s<span class="sc">$</span>V[[<span class="dv">3</span>]]</span></code></pre></div>
+<pre><code>##           [,1]      [,2]      [,3]
+## [1,] 3.7085186 0.7204926 0.5651862
+## [2,] 0.7204926 1.7292273 0.4907360
+## [3,] 0.5651862 0.4907360 0.7512749</code></pre>
+</div>
+<div id="fixed-effects-hidden-markov-model" class="section level3">
+<h3>Fixed Effects Hidden Markov Model</h3>
+<p>Use kmeans to get initial class memberships, but use actual means to
+avoid label permutation issues, then fit a hidden Markov model to each
+sequence forcing common transition probabilities across sequences</p>
+<div class="sourceCode" id="cb84"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb84-1"><a href="#cb84-1" aria-hidden="true" tabindex="-1"></a>km <span class="ot">&lt;-</span> <span class="fu">kmeans</span>(s<span class="sc">$</span>y,s<span class="sc">$</span>Mu)</span>
+<span id="cb84-2"><a href="#cb84-2" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">gmvnHMM</span>(s<span class="sc">$</span>y,km<span class="sc">$</span>cluster,s<span class="sc">$</span>gr,<span class="at">common.transition =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<p>Compare classifications across all groups</p>
+<div class="sourceCode" id="cb85"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(<span class="fu">unlist</span>(<span class="fu">lapply</span>(fit<span class="sc">$</span>pars,<span class="cf">function</span>(p) <span class="fu">max.col</span>(p<span class="sc">$</span>P))),s<span class="sc">$</span>cl)</span></code></pre></div>
+<pre><code>##    
+##         1     2     3
+##   1 13215    48   291
+##   2   116 22874     0
+##   3   835    19 12320</code></pre>
+<p>Compare group means</p>
+<div class="sourceCode" id="cb87"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Check parameter estimates match simulation</span></span>
+<span id="cb87-2"><a href="#cb87-2" aria-hidden="true" tabindex="-1"></a>opar <span class="ot">&lt;-</span> <span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>),<span class="at">mar=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>)<span class="sc">+</span><span class="fl">0.1</span>)</span>
+<span id="cb87-3"><a href="#cb87-3" aria-hidden="true" tabindex="-1"></a><span class="fu">matplot</span>(s<span class="sc">$</span>A[,,<span class="dv">1</span>],<span class="fu">t</span>(<span class="fu">sapply</span>(fit<span class="sc">$</span>pars,<span class="cf">function</span>(p) p<span class="sc">$</span>mvn[[<span class="dv">1</span>]]<span class="sc">$</span>mu)),<span class="at">pch=</span><span class="dv">16</span>,<span class="at">cex=</span><span class="fl">0.5</span>,<span class="at">xlab=</span><span class="st">&quot;&quot;</span>,<span class="at">ylab=</span><span class="st">&quot;&quot;</span>)</span>
+<span id="cb87-4"><a href="#cb87-4" aria-hidden="true" tabindex="-1"></a><span class="fu">matplot</span>(s<span class="sc">$</span>A[,,<span class="dv">2</span>],<span class="fu">t</span>(<span class="fu">sapply</span>(fit<span class="sc">$</span>pars,<span class="cf">function</span>(p) p<span class="sc">$</span>mvn[[<span class="dv">2</span>]]<span class="sc">$</span>mu)),<span class="at">pch=</span><span class="dv">16</span>,<span class="at">cex=</span><span class="fl">0.5</span>,<span class="at">xlab=</span><span class="st">&quot;&quot;</span>,<span class="at">ylab=</span><span class="st">&quot;&quot;</span>)</span>
+<span id="cb87-5"><a href="#cb87-5" aria-hidden="true" tabindex="-1"></a><span class="fu">matplot</span>(s<span class="sc">$</span>A[,,<span class="dv">3</span>],<span class="fu">t</span>(<span class="fu">sapply</span>(fit<span class="sc">$</span>pars,<span class="cf">function</span>(p) p<span class="sc">$</span>mvn[[<span class="dv">3</span>]]<span class="sc">$</span>mu)),<span class="at">pch=</span><span class="dv">16</span>,<span class="at">cex=</span><span class="fl">0.5</span>,<span class="at">xlab=</span><span class="st">&quot;&quot;</span>,<span class="at">ylab=</span><span class="st">&quot;&quot;</span>)</span>
+<span id="cb87-6"><a href="#cb87-6" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(opar)</span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<p>Compare covariances</p>
+<div class="sourceCode" id="cb88"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a>fit<span class="sc">$</span>pars[[<span class="dv">1</span>]]<span class="sc">$</span>mvn[[<span class="dv">1</span>]]<span class="sc">$</span>Sigma</span></code></pre></div>
+<pre><code>##            [,1]       [,2]       [,3]
+## [1,]  0.9570033 -0.6984707  0.8086874
+## [2,] -0.6984707  5.5892589 -5.6411141
+## [3,]  0.8086874 -5.6411141  5.7677962</code></pre>
+<div class="sourceCode" id="cb90"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb90-1"><a href="#cb90-1" aria-hidden="true" tabindex="-1"></a>s<span class="sc">$</span>V[[<span class="dv">1</span>]]</span></code></pre></div>
+<pre><code>##            [,1]       [,2]       [,3]
+## [1,]  0.9393509 -0.6951404  0.8039255
+## [2,] -0.6951404  5.6224343 -5.6769751
+## [3,]  0.8039255 -5.6769751  5.8044153</code></pre>
+<div class="sourceCode" id="cb92"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb92-1"><a href="#cb92-1" aria-hidden="true" tabindex="-1"></a>fit<span class="sc">$</span>pars[[<span class="dv">1</span>]]<span class="sc">$</span>mvn[[<span class="dv">2</span>]]<span class="sc">$</span>Sigma</span></code></pre></div>
+<pre><code>##          [,1]     [,2]     [,3]
+## [1,] 5.177193 0.236711 3.424177
+## [2,] 0.236711 1.454567 2.372122
+## [3,] 3.424177 2.372122 5.675957</code></pre>
+<div class="sourceCode" id="cb94"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb94-1"><a href="#cb94-1" aria-hidden="true" tabindex="-1"></a>s<span class="sc">$</span>V[[<span class="dv">2</span>]]</span></code></pre></div>
+<pre><code>##           [,1]      [,2]     [,3]
+## [1,] 5.2063151 0.2528132 3.465387
+## [2,] 0.2528132 1.4422909 2.362094
+## [3,] 3.4653875 2.3620943 5.683514</code></pre>
+<div class="sourceCode" id="cb96"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb96-1"><a href="#cb96-1" aria-hidden="true" tabindex="-1"></a>fit<span class="sc">$</span>pars[[<span class="dv">1</span>]]<span class="sc">$</span>mvn[[<span class="dv">3</span>]]<span class="sc">$</span>Sigma</span></code></pre></div>
+<pre><code>##           [,1]        [,2]        [,3]
+## [1,] 3.8118696  0.71859661  0.24855928
+## [2,] 0.7185966  2.04664095 -0.03837645
+## [3,] 0.2485593 -0.03837645  1.67341207</code></pre>
+<div class="sourceCode" id="cb98"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb98-1"><a href="#cb98-1" aria-hidden="true" tabindex="-1"></a>s<span class="sc">$</span>V[[<span class="dv">3</span>]]</span></code></pre></div>
+<pre><code>##           [,1]      [,2]      [,3]
+## [1,] 3.7085186 0.7204926 0.5651862
+## [2,] 0.7204926 1.7292273 0.4907360
+## [3,] 0.5651862 0.4907360 0.7512749</code></pre>
+<p>Compare transition probabilities</p>
+<div class="sourceCode" id="cb100"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb100-1"><a href="#cb100-1" aria-hidden="true" tabindex="-1"></a>fit<span class="sc">$</span>pars[[<span class="dv">1</span>]]<span class="sc">$</span>Q</span></code></pre></div>
+<pre><code>##           [,1]      [,2]       [,3]
+## [1,] 0.2734859 0.6921932 0.03432091
+## [2,] 0.3469748 0.2114656 0.44155965
+## [3,] 0.1392366 0.6577995 0.20296397</code></pre>
+<div class="sourceCode" id="cb102"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb102-1"><a href="#cb102-1" aria-hidden="true" tabindex="-1"></a>s<span class="sc">$</span>Q</span></code></pre></div>
+<pre><code>##           [,1]      [,2]       [,3]
+## [1,] 0.2787591 0.6918734 0.02936753
+## [2,] 0.3624129 0.2104785 0.42710864
+## [3,] 0.1512053 0.6594140 0.18938071</code></pre>
+</div>
+<div id="random-effects-mixture-model" class="section level3">
+<h3>Random Effects Mixture Model</h3>
+<p>Use kmeans to get initial class memberships, but use actual means to
+avoid label permutation issues, then fit a mixture model to each
+sequence forcing common mixing fractions across sequences</p>
+<div class="sourceCode" id="cb104"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb104-1"><a href="#cb104-1" aria-hidden="true" tabindex="-1"></a>km <span class="ot">&lt;-</span> <span class="fu">kmeans</span>(s<span class="sc">$</span>y,s<span class="sc">$</span>Mu)</span>
+<span id="cb104-2"><a href="#cb104-2" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">grmvnMix</span>(s<span class="sc">$</span>y,km<span class="sc">$</span>cluster,s<span class="sc">$</span>gr,<span class="at">common.fractions =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<p>Compare classifications across all groups</p>
+<div class="sourceCode" id="cb105"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb105-1"><a href="#cb105-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(<span class="fu">unlist</span>(<span class="fu">lapply</span>(fit<span class="sc">$</span>pars,<span class="cf">function</span>(p) <span class="fu">max.col</span>(p<span class="sc">$</span>P))),s<span class="sc">$</span>cl)</span></code></pre></div>
+<pre><code>##    
+##         1     2     3
+##   1 13296    40   292
+##   2   176 22879     3
+##   3   694    22 12316</code></pre>
+<p>Compare group means</p>
+<div class="sourceCode" id="cb107"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb107-1"><a href="#cb107-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Check parameter estimates match simulation</span></span>
+<span id="cb107-2"><a href="#cb107-2" aria-hidden="true" tabindex="-1"></a>opar <span class="ot">&lt;-</span> <span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>),<span class="at">mar=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>)<span class="sc">+</span><span class="fl">0.1</span>)</span>
+<span id="cb107-3"><a href="#cb107-3" aria-hidden="true" tabindex="-1"></a><span class="fu">matplot</span>(s<span class="sc">$</span>A[,,<span class="dv">1</span>],<span class="fu">t</span>(<span class="fu">sapply</span>(fit<span class="sc">$</span>pars,<span class="cf">function</span>(p) p<span class="sc">$</span>mvn[[<span class="dv">1</span>]]<span class="sc">$</span>mu)),<span class="at">pch=</span><span class="dv">16</span>,<span class="at">cex=</span><span class="fl">0.5</span>,<span class="at">xlab=</span><span class="st">&quot;&quot;</span>,<span class="at">ylab=</span><span class="st">&quot;&quot;</span>)</span>
+<span id="cb107-4"><a href="#cb107-4" aria-hidden="true" tabindex="-1"></a><span class="fu">matplot</span>(s<span class="sc">$</span>A[,,<span class="dv">2</span>],<span class="fu">t</span>(<span class="fu">sapply</span>(fit<span class="sc">$</span>pars,<span class="cf">function</span>(p) p<span class="sc">$</span>mvn[[<span class="dv">2</span>]]<span class="sc">$</span>mu)),<span class="at">pch=</span><span class="dv">16</span>,<span class="at">cex=</span><span class="fl">0.5</span>,<span class="at">xlab=</span><span class="st">&quot;&quot;</span>,<span class="at">ylab=</span><span class="st">&quot;&quot;</span>)</span>
+<span id="cb107-5"><a href="#cb107-5" aria-hidden="true" tabindex="-1"></a><span class="fu">matplot</span>(s<span class="sc">$</span>A[,,<span class="dv">3</span>],<span class="fu">t</span>(<span class="fu">sapply</span>(fit<span class="sc">$</span>pars,<span class="cf">function</span>(p) p<span class="sc">$</span>mvn[[<span class="dv">3</span>]]<span class="sc">$</span>mu)),<span class="at">pch=</span><span class="dv">16</span>,<span class="at">cex=</span><span class="fl">0.5</span>,<span class="at">xlab=</span><span class="st">&quot;&quot;</span>,<span class="at">ylab=</span><span class="st">&quot;&quot;</span>)</span>
+<span id="cb107-6"><a href="#cb107-6" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(opar)</span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<p>Compare covariances</p>
+<div class="sourceCode" id="cb108"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb108-1"><a href="#cb108-1" aria-hidden="true" tabindex="-1"></a>fit<span class="sc">$</span>pars[[<span class="dv">1</span>]]<span class="sc">$</span>mvn[[<span class="dv">1</span>]]<span class="sc">$</span>Sigma</span></code></pre></div>
+<pre><code>##            [,1]       [,2]       [,3]
+## [1,]  0.9660406 -0.7002619  0.8109872
+## [2,] -0.7002619  5.6209618 -5.6730812
+## [3,]  0.8109872 -5.6730812  5.8010509</code></pre>
+<div class="sourceCode" id="cb110"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb110-1"><a href="#cb110-1" aria-hidden="true" tabindex="-1"></a>s<span class="sc">$</span>V[[<span class="dv">1</span>]]</span></code></pre></div>
+<pre><code>##            [,1]       [,2]       [,3]
+## [1,]  0.9393509 -0.6951404  0.8039255
+## [2,] -0.6951404  5.6224343 -5.6769751
+## [3,]  0.8039255 -5.6769751  5.8044153</code></pre>
+<div class="sourceCode" id="cb112"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb112-1"><a href="#cb112-1" aria-hidden="true" tabindex="-1"></a>fit<span class="sc">$</span>pars[[<span class="dv">1</span>]]<span class="sc">$</span>mvn[[<span class="dv">2</span>]]<span class="sc">$</span>Sigma</span></code></pre></div>
+<pre><code>##           [,1]      [,2]     [,3]
+## [1,] 5.1930204 0.2330911 3.428079
+## [2,] 0.2330911 1.4603784 2.378830
+## [3,] 3.4280790 2.3788300 5.688562</code></pre>
+<div class="sourceCode" id="cb114"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb114-1"><a href="#cb114-1" aria-hidden="true" tabindex="-1"></a>s<span class="sc">$</span>V[[<span class="dv">2</span>]]</span></code></pre></div>
+<pre><code>##           [,1]      [,2]     [,3]
+## [1,] 5.2063151 0.2528132 3.465387
+## [2,] 0.2528132 1.4422909 2.362094
+## [3,] 3.4653875 2.3620943 5.683514</code></pre>
+<div class="sourceCode" id="cb116"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb116-1"><a href="#cb116-1" aria-hidden="true" tabindex="-1"></a>fit<span class="sc">$</span>pars[[<span class="dv">1</span>]]<span class="sc">$</span>mvn[[<span class="dv">3</span>]]<span class="sc">$</span>Sigma</span></code></pre></div>
+<pre><code>##           [,1]       [,2]       [,3]
+## [1,] 3.8200515 0.73448708 0.30764074
+## [2,] 0.7344871 2.03592289 0.01671447
+## [3,] 0.3076407 0.01671447 1.58038493</code></pre>
+<div class="sourceCode" id="cb118"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb118-1"><a href="#cb118-1" aria-hidden="true" tabindex="-1"></a>s<span class="sc">$</span>V[[<span class="dv">3</span>]]</span></code></pre></div>
+<pre><code>##           [,1]      [,2]      [,3]
+## [1,] 3.7085186 0.7204926 0.5651862
+## [2,] 0.7204926 1.7292273 0.4907360
+## [3,] 0.5651862 0.4907360 0.7512749</code></pre>
+<p>Compare covariances of group means</p>
+<div class="sourceCode" id="cb120"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb120-1"><a href="#cb120-1" aria-hidden="true" tabindex="-1"></a>fit<span class="sc">$</span>muv[[<span class="dv">1</span>]]<span class="sc">$</span>U</span></code></pre></div>
+<pre><code>##            [,1]       [,2]       [,3]
+## [1,]  0.7192098 -0.2572025 -0.1059888
+## [2,] -0.2572025  1.7493307 -2.2977552
+## [3,] -0.1059888 -2.2977552  3.9154455</code></pre>
+<div class="sourceCode" id="cb122"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb122-1"><a href="#cb122-1" aria-hidden="true" tabindex="-1"></a>s<span class="sc">$</span>U[[<span class="dv">1</span>]]</span></code></pre></div>
+<pre><code>##            [,1]       [,2]       [,3]
+## [1,]  0.3062235 -0.2878761  0.3066618
+## [2,] -0.2878761  1.8914922 -2.6611649
+## [3,]  0.3066618 -2.6611649  4.1509031</code></pre>
+<div class="sourceCode" id="cb124"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb124-1"><a href="#cb124-1" aria-hidden="true" tabindex="-1"></a>fit<span class="sc">$</span>muv[[<span class="dv">2</span>]]<span class="sc">$</span>U</span></code></pre></div>
+<pre><code>##            [,1]       [,2]       [,3]
+## [1,]  1.0885124 -0.6205009 -0.4547274
+## [2,] -0.6205009  1.3685139  0.8645794
+## [3,] -0.4547274  0.8645794  0.8698073</code></pre>
+<div class="sourceCode" id="cb126"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb126-1"><a href="#cb126-1" aria-hidden="true" tabindex="-1"></a>s<span class="sc">$</span>U[[<span class="dv">2</span>]]</span></code></pre></div>
+<pre><code>##            [,1]       [,2]       [,3]
+## [1,]  1.0599629 -0.6517513 -0.4803685
+## [2,] -0.6517513  1.2551901  0.8220327
+## [3,] -0.4803685  0.8220327  1.0411222</code></pre>
+<div class="sourceCode" id="cb128"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb128-1"><a href="#cb128-1" aria-hidden="true" tabindex="-1"></a>fit<span class="sc">$</span>muv[[<span class="dv">3</span>]]<span class="sc">$</span>U</span></code></pre></div>
+<pre><code>##           [,1]      [,2]      [,3]
+## [1,] 2.0713084 1.9497108 0.4880887
+## [2,] 1.9497108 1.9916467 0.4750841
+## [3,] 0.4880887 0.4750841 0.7917677</code></pre>
+<div class="sourceCode" id="cb130"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb130-1"><a href="#cb130-1" aria-hidden="true" tabindex="-1"></a>s<span class="sc">$</span>U[[<span class="dv">3</span>]]</span></code></pre></div>
+<pre><code>##           [,1]      [,2]      [,3]
+## [1,] 2.5127474 2.4131857 0.4199897
+## [2,] 2.4131857 2.3852437 0.3778228
+## [3,] 0.4199897 0.3778228 0.1715572</code></pre>
+</div>
+<div id="random-effects-hidden-markov-model" class="section level3">
+<h3>Random Effects Hidden Markov Model</h3>
+<p>Use kmeans to get initial class memberships, but use actual means to
+avoid label permutation issues, then fit a hidden Markov model to each
+sequence forcing common transition probabilities across sequences</p>
+<div class="sourceCode" id="cb132"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb132-1"><a href="#cb132-1" aria-hidden="true" tabindex="-1"></a>km <span class="ot">&lt;-</span> <span class="fu">kmeans</span>(s<span class="sc">$</span>y,s<span class="sc">$</span>Mu)</span>
+<span id="cb132-2"><a href="#cb132-2" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">grmvnHMM</span>(s<span class="sc">$</span>y,km<span class="sc">$</span>cluster,s<span class="sc">$</span>gr,<span class="at">common.transition =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<p>Compare classifications across all groups</p>
+<div class="sourceCode" id="cb133"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb133-1"><a href="#cb133-1" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(<span class="fu">unlist</span>(<span class="fu">lapply</span>(fit<span class="sc">$</span>pars,<span class="cf">function</span>(p) <span class="fu">max.col</span>(p<span class="sc">$</span>P))),s<span class="sc">$</span>cl)</span></code></pre></div>
+<pre><code>##    
+##         1     2     3
+##   1 13349    47   270
+##   2   115 22876     0
+##   3   702    18 12341</code></pre>
+<p>Compare group means</p>
+<div class="sourceCode" id="cb135"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb135-1"><a href="#cb135-1" aria-hidden="true" tabindex="-1"></a><span class="do">## Check parameter estimates match simulation</span></span>
+<span id="cb135-2"><a href="#cb135-2" aria-hidden="true" tabindex="-1"></a>opar <span class="ot">&lt;-</span> <span class="fu">par</span>(<span class="at">mfrow=</span><span class="fu">c</span>(<span class="dv">2</span>,<span class="dv">2</span>),<span class="at">mar=</span><span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">1</span>)<span class="sc">+</span><span class="fl">0.1</span>)</span>
+<span id="cb135-3"><a href="#cb135-3" aria-hidden="true" tabindex="-1"></a><span class="fu">matplot</span>(s<span class="sc">$</span>A[,,<span class="dv">1</span>],<span class="fu">t</span>(<span class="fu">sapply</span>(fit<span class="sc">$</span>pars,<span class="cf">function</span>(p) p<span class="sc">$</span>mvn[[<span class="dv">1</span>]]<span class="sc">$</span>mu)),<span class="at">pch=</span><span class="dv">16</span>,<span class="at">cex=</span><span class="fl">0.5</span>,<span class="at">xlab=</span><span class="st">&quot;&quot;</span>,<span class="at">ylab=</span><span class="st">&quot;&quot;</span>)</span>
+<span id="cb135-4"><a href="#cb135-4" aria-hidden="true" tabindex="-1"></a><span class="fu">matplot</span>(s<span class="sc">$</span>A[,,<span class="dv">2</span>],<span class="fu">t</span>(<span class="fu">sapply</span>(fit<span class="sc">$</span>pars,<span class="cf">function</span>(p) p<span class="sc">$</span>mvn[[<span class="dv">2</span>]]<span class="sc">$</span>mu)),<span class="at">pch=</span><span class="dv">16</span>,<span class="at">cex=</span><span class="fl">0.5</span>,<span class="at">xlab=</span><span class="st">&quot;&quot;</span>,<span class="at">ylab=</span><span class="st">&quot;&quot;</span>)</span>
+<span id="cb135-5"><a href="#cb135-5" aria-hidden="true" tabindex="-1"></a><span class="fu">matplot</span>(s<span class="sc">$</span>A[,,<span class="dv">3</span>],<span class="fu">t</span>(<span class="fu">sapply</span>(fit<span class="sc">$</span>pars,<span class="cf">function</span>(p) p<span class="sc">$</span>mvn[[<span class="dv">3</span>]]<span class="sc">$</span>mu)),<span class="at">pch=</span><span class="dv">16</span>,<span class="at">cex=</span><span class="fl">0.5</span>,<span class="at">xlab=</span><span class="st">&quot;&quot;</span>,<span class="at">ylab=</span><span class="st">&quot;&quot;</span>)</span>
+<span id="cb135-6"><a href="#cb135-6" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(opar)</span></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<p>Compare covariances</p>
+<div class="sourceCode" id="cb136"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb136-1"><a href="#cb136-1" aria-hidden="true" tabindex="-1"></a>fit<span class="sc">$</span>pars[[<span class="dv">1</span>]]<span class="sc">$</span>mvn[[<span class="dv">1</span>]]<span class="sc">$</span>Sigma</span></code></pre></div>
+<pre><code>##            [,1]       [,2]       [,3]
+## [1,]  0.9633667 -0.7020381  0.8126584
+## [2,] -0.7020381  5.6305765 -5.6827641
+## [3,]  0.8126584 -5.6827641  5.8103040</code></pre>
+<div class="sourceCode" id="cb138"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb138-1"><a href="#cb138-1" aria-hidden="true" tabindex="-1"></a>s<span class="sc">$</span>V[[<span class="dv">1</span>]]</span></code></pre></div>
+<pre><code>##            [,1]       [,2]       [,3]
+## [1,]  0.9393509 -0.6951404  0.8039255
+## [2,] -0.6951404  5.6224343 -5.6769751
+## [3,]  0.8039255 -5.6769751  5.8044153</code></pre>
+<div class="sourceCode" id="cb140"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb140-1"><a href="#cb140-1" aria-hidden="true" tabindex="-1"></a>fit<span class="sc">$</span>pars[[<span class="dv">1</span>]]<span class="sc">$</span>mvn[[<span class="dv">2</span>]]<span class="sc">$</span>Sigma</span></code></pre></div>
+<pre><code>##           [,1]      [,2]     [,3]
+## [1,] 5.2019834 0.2379532 3.440748
+## [2,] 0.2379532 1.4614032 2.383345
+## [3,] 3.4407480 2.3833451 5.703021</code></pre>
+<div class="sourceCode" id="cb142"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb142-1"><a href="#cb142-1" aria-hidden="true" tabindex="-1"></a>s<span class="sc">$</span>V[[<span class="dv">2</span>]]</span></code></pre></div>
+<pre><code>##           [,1]      [,2]     [,3]
+## [1,] 5.2063151 0.2528132 3.465387
+## [2,] 0.2528132 1.4422909 2.362094
+## [3,] 3.4653875 2.3620943 5.683514</code></pre>
+<div class="sourceCode" id="cb144"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb144-1"><a href="#cb144-1" aria-hidden="true" tabindex="-1"></a>fit<span class="sc">$</span>pars[[<span class="dv">1</span>]]<span class="sc">$</span>mvn[[<span class="dv">3</span>]]<span class="sc">$</span>Sigma</span></code></pre></div>
+<pre><code>##           [,1]       [,2]       [,3]
+## [1,] 3.8183707 0.73687458 0.30573989
+## [2,] 0.7368746 2.03434147 0.01248903
+## [3,] 0.3057399 0.01248903 1.59389869</code></pre>
+<div class="sourceCode" id="cb146"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb146-1"><a href="#cb146-1" aria-hidden="true" tabindex="-1"></a>s<span class="sc">$</span>V[[<span class="dv">3</span>]]</span></code></pre></div>
+<pre><code>##           [,1]      [,2]      [,3]
+## [1,] 3.7085186 0.7204926 0.5651862
+## [2,] 0.7204926 1.7292273 0.4907360
+## [3,] 0.5651862 0.4907360 0.7512749</code></pre>
+<p>Compare covariances of group means</p>
+<div class="sourceCode" id="cb148"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb148-1"><a href="#cb148-1" aria-hidden="true" tabindex="-1"></a>fit<span class="sc">$</span>muv[[<span class="dv">1</span>]]<span class="sc">$</span>U</span></code></pre></div>
+<pre><code>##            [,1]       [,2]       [,3]
+## [1,]  0.7392143 -0.2722172 -0.1225613
+## [2,] -0.2722172  1.7420354 -2.2917626
+## [3,] -0.1225613 -2.2917626  3.9238625</code></pre>
+<div class="sourceCode" id="cb150"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb150-1"><a href="#cb150-1" aria-hidden="true" tabindex="-1"></a>s<span class="sc">$</span>U[[<span class="dv">1</span>]]</span></code></pre></div>
+<pre><code>##            [,1]       [,2]       [,3]
+## [1,]  0.3062235 -0.2878761  0.3066618
+## [2,] -0.2878761  1.8914922 -2.6611649
+## [3,]  0.3066618 -2.6611649  4.1509031</code></pre>
+<div class="sourceCode" id="cb152"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb152-1"><a href="#cb152-1" aria-hidden="true" tabindex="-1"></a>fit<span class="sc">$</span>muv[[<span class="dv">2</span>]]<span class="sc">$</span>U</span></code></pre></div>
+<pre><code>##            [,1]       [,2]       [,3]
+## [1,]  1.0904056 -0.6214872 -0.4551217
+## [2,] -0.6214872  1.3684953  0.8648161
+## [3,] -0.4551217  0.8648161  0.8711351</code></pre>
+<div class="sourceCode" id="cb154"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb154-1"><a href="#cb154-1" aria-hidden="true" tabindex="-1"></a>s<span class="sc">$</span>U[[<span class="dv">2</span>]]</span></code></pre></div>
+<pre><code>##            [,1]       [,2]       [,3]
+## [1,]  1.0599629 -0.6517513 -0.4803685
+## [2,] -0.6517513  1.2551901  0.8220327
+## [3,] -0.4803685  0.8220327  1.0411222</code></pre>
+<div class="sourceCode" id="cb156"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb156-1"><a href="#cb156-1" aria-hidden="true" tabindex="-1"></a>fit<span class="sc">$</span>muv[[<span class="dv">3</span>]]<span class="sc">$</span>U</span></code></pre></div>
+<pre><code>##           [,1]      [,2]      [,3]
+## [1,] 2.0672723 1.9476188 0.4910003
+## [2,] 1.9476188 1.9900042 0.4771539
+## [3,] 0.4910003 0.4771539 0.7812775</code></pre>
+<div class="sourceCode" id="cb158"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb158-1"><a href="#cb158-1" aria-hidden="true" tabindex="-1"></a>s<span class="sc">$</span>U[[<span class="dv">3</span>]]</span></code></pre></div>
+<pre><code>##           [,1]      [,2]      [,3]
+## [1,] 2.5127474 2.4131857 0.4199897
+## [2,] 2.4131857 2.3852437 0.3778228
+## [3,] 0.4199897 0.3778228 0.1715572</code></pre>
+<p>Compare transition probabilities</p>
+<div class="sourceCode" id="cb160"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb160-1"><a href="#cb160-1" aria-hidden="true" tabindex="-1"></a>fit<span class="sc">$</span>pars[[<span class="dv">1</span>]]<span class="sc">$</span>Q</span></code></pre></div>
+<pre><code>##           [,1]      [,2]       [,3]
+## [1,] 0.2734452 0.6927252 0.03382958
+## [2,] 0.3500796 0.2114935 0.43842696
+## [3,] 0.1418832 0.6568826 0.20123415</code></pre>
+<div class="sourceCode" id="cb162"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb162-1"><a href="#cb162-1" aria-hidden="true" tabindex="-1"></a>s<span class="sc">$</span>Q</span></code></pre></div>
+<pre><code>##           [,1]      [,2]       [,3]
+## [1,] 0.2787591 0.6918734 0.02936753
+## [2,] 0.3624129 0.2104785 0.42710864
+## [3,] 0.1512053 0.6594140 0.18938071</code></pre>
+</div>
+</div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
