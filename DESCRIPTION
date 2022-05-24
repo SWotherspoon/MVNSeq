@@ -2,7 +2,6 @@ Package: MVNSeq
 Type: Package
 Title: Normal Mixture and Hidden Markov Models
 Version: 0.1
-Date: 2015-11-14
 Authors@R: as.person(c(
     "Simon Wotherspoon <Simon.Wotherspoon@utas.edu.au> [aut, cre]",
     "Aidan Bindoff <Bindoffa@utas.edu.au> [aut]"))
