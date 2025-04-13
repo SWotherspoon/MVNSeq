@@ -63,11 +63,11 @@ Fit multivariate Normal Hidden Markov models by EM.
 }
 \details{
 These functions fit K state multivariate Normal hidden Markov
-models to sequences of observations. \code{mvnHMM} fits a hidden
-Markov model to a single sequence of observations. \code{gmvnHMM}
-and \code{grmvnHMM} fits separate Markov models to several groups
-(sequences) of observations. \code{gmvnHMM} fits a hidden Markov
-model to each group so that each state has a different mean across
-groups, but a common covariance. \code{grmvnMix} constrains the
-means of the states to be Normally distributed across groups.
+models to sequences of observations. `mvnHMM` fits a hidden Markov
+model to a single sequence of observations. `gmvnHMM` and
+`grmvnHMM` fits separate Markov models to several groups
+(sequences) of observations. `gmvnHMM` fits a hidden Markov model
+to each group so that each state has a different mean across
+groups, but a common covariance. `grmvnHMM` constrains the means
+of the states to be Normally distributed across groups.
 }

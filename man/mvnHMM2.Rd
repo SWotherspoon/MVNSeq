@@ -76,12 +76,11 @@ Fit multivariate Normal 2 State Hidden Markov models by EM.
 \details{
 These functions fit multivariate Normal 2 state hidden Markov
 models to sequences of observations, where the transition
-probabilities are governed by logistic regression. \code{mvnHMM2}
-fits a hidden Markov model to a single sequence of
-observations. \code{gmvnHMM2} and \code{grmvnHMM2} fit separate
-Markov models to several groups (sequences) of
-observations. \code{gmvnHMM2} fits a hidden Markov model to each
-group so that each state has a different mean across groups, but a
-common covariance. \code{grmvnHMM2} constrains the means of the
-states to be Normally distributed across groups.
+probabilities are governed by logistic regression. `mvnHMM2` fits
+a hidden Markov model to a single sequence of observations.
+`gmvnHMM2` and `grmvnHMM2` fit separate Markov models to several
+groups (sequences) of observations. `gmvnHMM2` fits a hidden
+Markov model to each group so that each state has a different mean
+across groups, but a common covariance. `grmvnHMM2` constrains the
+means of the states to be Normally distributed across groups.
 }

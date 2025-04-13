@@ -17,7 +17,7 @@ initHMM(y, cl, K = max(cl))
 \item{K}{the number of classes}
 }
 \value{
-\code{parsMixClass} returns a list with elements
+`parsMixClass` returns a list with elements
 }
 \description{
 Initial parameter estimates for HMM and mixture models.

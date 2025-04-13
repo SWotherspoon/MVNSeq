@@ -63,11 +63,11 @@ Fit multivariate Normal mixture models by EM.
 }
 \details{
 These functions fit K component multivariate Normal mixtures to
-sequences of observations. \code{mvnMix} fits a mixture model to a
-single sequence of observations. \code{gmvnMix} and
-\code{grmvnMix} fits separate mixture models to several groups
-(sequences) of observations. \code{gmvnMix} fits a mixture to each
-group so that each component has a different mean across groups,
-but a common covariance. \code{grmvnMix} constrains the means of
-the components to be Normally distributed across groups.
+sequences of observations. `mvnMix` fits a mixture model to a
+single sequence of observations. `gmvnMix` and `grmvnMix` fits
+separate mixture models to several groups (sequences) of
+observations. `gmvnMix` fits a mixture to each group so that each
+component has a different mean across groups, but a common
+covariance. `grmvnMix` constrains the means of the components to
+be Normally distributed across groups.
 }
