@@ -21,6 +21,7 @@ Useful links:
 
 Authors:
 \itemize{
+  \item Simon Wotherspoon \email{Simon.Wotherspoon@utas.edu.au}
   \item Aidan Bindoff \email{Bindoffa@utas.edu.au}
 }
 
